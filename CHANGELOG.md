@@ -1,4 +1,11 @@
 # CHANGELOG
+## 2.2.0 2019-20-12
+- Refactor methods
+- Added missing pad method
+- Change config name
+- Fixed Class Object name that is not acceptable in php
+- Fixed depreceated and failing tests
+- updated php unit and other packages
 
 ## 2.1.0 - 2015-08-12
 
