@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -22,7 +23,7 @@ class Dispatch
     /**
      * The namespace containing the Type classes.
      */
-    const TYPES = 'Underscore\Types\\';
+    public const TYPES = 'Underscore\Types\\';
 
     /**
      * An array of PHP types and what classes they map to.
@@ -30,15 +31,15 @@ class Dispatch
      * @var array
      */
     protected static $classmap = [
-        'array' => 'Arrays',
-        'double' => 'Number',
+        'array'   => 'Arrays',
+        'double'  => 'Number',
         'closure' => 'Functions',
-        'float' => 'Number',
+        'float'   => 'Number',
         'integer' => 'Number',
-        'NULL' => 'Strings',
-        'object' => 'Object',
-        'real' => 'Number',
-        'string' => 'Strings',
+        'NULL'    => 'Strings',
+        'object'  => 'BaseObject',
+        'real'    => 'Number',
+        'string'  => 'Strings',
     ];
 
     /**
@@ -48,15 +49,15 @@ class Dispatch
      *
      * @return string Its fully qualified corresponding class
      */
-    public static function toClass($subject)
+    public static function toClass($subject) : string
     {
-        $subjectType = gettype($subject);
+        $subjectType = \gettype($subject);
         if ($subject instanceof Closure) {
             $subjectType = 'closure';
         }
 
         // Return correct class
-        if (array_key_exists($subjectType, static::$classmap)) {
+        if (\array_key_exists($subjectType, static::$classmap)) {
             return static::TYPES.static::$classmap[$subjectType];
         }
 
@@ -69,7 +70,7 @@ class Dispatch
      * @param string $class  The class
      * @param string $method The method
      *
-     * @return string The correct function to call
+     * @return bool|string The correct function to call
      */
     public static function toNative($class, $method)
     {
@@ -97,7 +98,7 @@ class Dispatch
 
         // Native function
         $function = $prefix.$method;
-        if (function_exists($function)) {
+        if (\function_exists($function)) {
             return $function;
         }
 

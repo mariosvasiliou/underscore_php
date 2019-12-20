@@ -11,28 +11,39 @@
 
 namespace Underscore;
 
-use PHPUnit_Framework_TestCase;
 
-abstract class UnderscoreTestCase extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Class UnderscoreTestCase
+ *
+ * @package Underscore
+ */
+abstract class UnderscoreTestCase extends TestCase
 {
-    public $array = ['foo' => 'bar', 'bis' => 'ter'];
+
+    public $array        = ['foo' => 'bar', 'bis' => 'ter'];
     public $arrayNumbers = [1, 2, 3];
-    public $arrayMulti = [
+    public $arrayMulti   = [
         ['foo' => 'bar', 'bis' => 'ter'],
         ['foo' => 'bar', 'bis' => 'ter'],
         ['bar' => 'foo', 'bis' => 'ter'],
     ];
     public $object;
+    /**
+     * @var object
+     */
+    public $objectMulti;
 
     /**
      * Restore data just in case.
      */
     public function setUp()
     {
-        $this->object = (object) $this->array;
-        $this->objectMulti = (object) [
-            (object) $this->arrayMulti[0],
-            (object) $this->arrayMulti[1],
+        $this->object      = (object)$this->array;
+        $this->objectMulti = (object)[
+            (object)$this->arrayMulti[0],
+            (object)$this->arrayMulti[1],
             (object) $this->arrayMulti[2],
         ];
     }

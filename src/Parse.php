@@ -41,7 +41,7 @@ class Parse
      *
      * @return string Converted data
      */
-    public static function toJSON($data)
+    public static function toJSON($data) : string
     {
         return json_encode($data);
     }
@@ -57,7 +57,7 @@ class Parse
      *
      * @return array
      */
-    public static function fromXML($xml)
+    public static function fromXML($xml) : array
     {
         $xml = simplexml_load_string($xml);
         $xml = json_encode($xml);
@@ -114,17 +114,17 @@ class Parse
      *
      * @return string Converted data
      */
-    public static function toCSV($data, $delimiter = ';', $exportHeaders = false)
+    public static function toCSV($data, $delimiter = ';', $exportHeaders = false) : string
     {
         $csv = [];
 
         // Convert objects to arrays
-        if (is_object($data)) {
-            $data = (array) $data;
+        if (\is_object($data)) {
+            $data = (array)$data;
         }
 
         // Don't convert if it's not an array
-        if (!is_array($data)) {
+        if ( ! \is_array($data)) {
             return $data;
         }
 
@@ -137,7 +137,7 @@ class Parse
         // Quote values and create row
         foreach ($data as $header => $row) {
             // If single column
-            if (!is_array($row)) {
+            if ( ! \is_array($row)) {
                 $csv[] = '"'.$header.'"'.$delimiter.'"'.$row.'"';
                 continue;
             }
@@ -164,14 +164,14 @@ class Parse
      *
      * @return array
      */
-    public static function toArray($data)
+    public static function toArray($data) : array
     {
         // Look for common array conversion patterns in objects
-        if (is_object($data) and method_exists($data, 'toArray')) {
+        if (\is_object($data) && method_exists($data, 'toArray')) {
             $data = $data->toArray();
         }
 
-        return (array) $data;
+        return (array)$data;
     }
 
     /**
@@ -181,14 +181,14 @@ class Parse
      *
      * @return string
      */
-    public static function toString($data)
+    public static function toString($data) : string
     {
         // Avoid Array to Strings conversion exception
-        if (is_array($data)) {
+        if (\is_array($data)) {
             return static::toJSON($data);
         }
 
-        return (string) $data;
+        return (string)$data;
     }
 
     /**
@@ -198,31 +198,31 @@ class Parse
      *
      * @return int
      */
-    public static function toInteger($data)
+    public static function toInteger($data) : int
     {
         // Returns size of arrays
-        if (is_array($data)) {
-            return count($data);
+        if (\is_array($data)) {
+            return \count($data);
         }
 
         // Returns size of strings
-        if (is_string($data) and !preg_match('/[0-9. ,]+/', $data)) {
-            return strlen($data);
+        if (\is_string($data) and ! preg_match('/[0-9. ,]+/', $data)) {
+            return \strlen($data);
         }
 
-        return (int) $data;
+        return (int)$data;
     }
 
     /**
      * Converts data to a boolean.
      *
-     * @param array|sring|object $data
+     * @param array|string|object $data
      *
      * @return bool
      */
-    public static function toBoolean($data)
+    public static function toBoolean($data) : bool
     {
-        return (bool) $data;
+        return (bool)$data;
     }
 
     /**
@@ -249,17 +249,17 @@ class Parse
      *
      * @return array
      */
-    public static function explodeWith($string, array $delimiters)
+    public static function explodeWith($string, array $delimiters) : array
     {
         $array = $string;
 
         foreach ($delimiters as $delimiter) {
             $array = explode($delimiter, $string);
-            if (count($array) === 1) {
+            if (\count($array) === 1) {
                 continue;
-            } else {
-                return $array;
             }
+
+            return $array;
         }
 
         return $array;

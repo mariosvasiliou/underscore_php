@@ -11,19 +11,27 @@
 
 namespace Underscore;
 
+use BadMethodCallException;
+use Underscore\Methods\ArraysMethods;
 use Underscore\Types\Arrays;
 use Underscore\Types\Strings;
 
+/**
+ * Class MethodTest
+ *
+ * @package Underscore
+ */
 class MethodTest extends UnderscoreTestCase
 {
-    public function testThrowsErrorIfIncorrectMethod()
+
+    public function testThrowsErrorIfIncorrectMethod() : void
     {
-        $this->setExpectedException('BadMethodCallException');
+        $this->expectException('BadMethodCallException');
 
         Underscore::invalid('foo');
     }
 
-    public function testHasAccessToOriginalPhpFunctions()
+    public function testHasAccessToOriginalPhpFunctions() : void
     {
         $array = Arrays::from($this->array);
         $array = $array->intersect(['foo' => 'bar', 'kal' => 'mon']);
@@ -37,37 +45,39 @@ class MethodTest extends UnderscoreTestCase
         $this->assertEquals('foo', $string->obtain());
     }
 
-    public function testCantChainCertainMethods()
+    public function testCantChainCertainMethods() : void
     {
         $method = Method::isUnchainable('Arrays', 'range');
 
         $this->assertTrue($method);
     }
 
-    public function testCanGetMethodsFromType()
+    public function testCanGetMethodsFromType() : void
     {
-        $method = Method::getMethodsFromType('\Underscore\Types\Arrays');
+        $method = Method::getMethodsFromType(Arrays::class);
 
-        $this->assertEquals('\Underscore\Methods\ArraysMethods', $method);
+        $this->assertEquals(ArraysMethods::class, $method);
     }
 
-    public function testCanGetAliasesOfFunctions()
+    public function testCanGetAliasesOfFunctions() : void
     {
         $method = Method::getAliasOf('select');
 
         $this->assertEquals('filter', $method);
     }
 
-    public function testCanFindMethodsInClasses()
+    public function testCanFindMethodsInClasses() : void
     {
-        $method = Method::findInClasses('\Underscore\Underscore', 'range');
+        $method = Method::findInClasses(Underscore::class, 'range');
 
-        $this->assertEquals('\Underscore\Types\\Arrays', $method);
+        /** @noinspection ClassConstantCanBeUsedInspection */
+        $this->assertEquals('\Underscore\Types\Arrays', $method);
     }
 
-    public function testCanThrowExceptionAtUnknownMethods()
+    public function testCanThrowExceptionAtUnknownMethods() : void
     {
-        $this->setExpectedException('BadMethodCallException',
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
+        $this->expectException(BadMethodCallException::class,
             'The method Underscore\Types\Arrays::fuck does not exist');
 
         $test = Arrays::fuck($this);

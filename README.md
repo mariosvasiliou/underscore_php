@@ -30,16 +30,16 @@ use Underscore\Types\Arrays;
 
 ## Using Underscore
 
-It can be used both as a static class, and an Object-Oriented class, so both the following are valid :
+It can be used both as a static class, and an BaseObject-Oriented class, so both the following are valid :
 
 ```php
-$array = array(1, 2, 3);
+$array = [1, 2, 3];
 
 // One-off calls to helpers
 Arrays::each($array, function($value) { return $value * $value; }) // Square the array
 Function::once($myFunction) // Only allow the function to be called once
 Number::paddingLeft(5, 5) // Returns '00005'
-Object::methods($myObject) // Return the object's methods
+BaseObject::methods($myObject) // Return the object's methods
 Strings::length('foobar') // Returns 6
 
 // Or chain calls with the 'from' method
@@ -92,12 +92,16 @@ When creating an Underscore repository, by default it's subject is an empty stri
 ```php
 class Users extends Arrays
 {
-  public function getDefault()
+  /**
+ * @return string
+*/public function getDefault(): string
   {
     return 'foobar';
   }
 
-  public function getUsers()
+  /**
+ * @return mixed
+*/public function getUsers()
   {
     // Fetch data from anywhere
 

@@ -1,16 +1,25 @@
 <?php
+declare(strict_types=1);
+
+use Underscore\Underscore;
 
 /**
  * Shortcut alias to creating an Underscore object
  *
  * @param mixed $type A scalar type to wrap
  *
- * @return \Underscore\Underscore
+ * @return Underscore
  */
 if ( ! function_exists('underscore')) {
-  function underscore($type) {
-    return new Underscore\Underscore($type);
-  }
+    /**
+     * @param $type
+     *
+     * @return Underscore
+     */
+    function underscore($type)
+    {
+        return new Underscore($type);
+    }
 }
 
 /**
@@ -18,10 +27,16 @@ if ( ! function_exists('underscore')) {
  *
  * @param mixed $type
  *
- * @return \Underscore\Underscore
+ * @return Underscore
  */
 if (!function_exists('__')) {
-	function __($type) {
-		return underscore($type);
-	}
+    /**
+     * @param $type
+     *
+     * @return Underscore
+     */
+    function __($type)
+    {
+        return underscore($type);
+    }
 }

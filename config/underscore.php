@@ -20,6 +20,7 @@ return [
         'getLast' => 'last',
         'select' => 'filter',
         'sortBy' => 'sort',
+        'pad' => 'padding',
     ],
 
 ];

@@ -13,6 +13,11 @@ namespace Underscore\Dummies;
 
 use Underscore\Types\Arrays;
 
+/**
+ * Class DummyClass
+ *
+ * @package Underscore\Dummies
+ */
 class DummyClass extends Arrays
 {
     /**
@@ -20,7 +25,7 @@ class DummyClass extends Arrays
      *
      * @return self
      */
-    public function getUsers()
+    public function getUsers() : self
     {
         $users = [
             ['foo' => 'bar'],
@@ -37,7 +42,7 @@ class DummyClass extends Arrays
      *
      * @return self
      */
-    public function map($whatever)
+    public function map($whatever) : self
     {
         $this->subject = $whatever * 3;
 

@@ -13,12 +13,18 @@ namespace Underscore\Types;
 
 use Underscore\UnderscoreTestCase;
 
+/**
+ * Class FunctionsTest
+ *
+ * @package Underscore\Types
+ */
 class FunctionsTest extends UnderscoreTestCase
 {
-    public function testCanCallFunctionOnlyOnce()
+
+    public function testCanCallFunctionOnlyOnce() : void
     {
-        $number = 0;
-        $function = Functions::once(function () use (&$number) {
+        $number   = 0;
+        $function = Functions::once(function() use (&$number) {
             ++$number;
         });
 
@@ -28,10 +34,10 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertEquals(1, $number);
     }
 
-    public function testCanCallFunctionOnlyXTimes()
+    public function testCanCallFunctionOnlyXTimes() : void
     {
-        $number = 0;
-        $function = Functions::only(function () use (&$number) {
+        $number   = 0;
+        $function = Functions::only(function() use (&$number) {
             ++$number;
         }, 3);
 
@@ -44,10 +50,10 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertEquals(3, $number);
     }
 
-    public function testCanCallFunctionAfterXTimes()
+    public function testCanCallFunctionAfterXTimes() : void
     {
-        $number = 0;
-        $function = Functions::after(function () use (&$number) {
+        $number   = 0;
+        $function = Functions::after(function() use (&$number) {
             ++$number;
         }, 3);
 
@@ -60,9 +66,9 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertEquals(2, $number);
     }
 
-    public function testCanCacheFunctionResults()
+    public function testCanCacheFunctionResults() : void
     {
-        $function = Functions::cache(function ($string) {
+        $function = Functions::cache(function($string) {
             return microtime();
         });
 
@@ -72,10 +78,10 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertNotEquals($result, $function('barfoo'));
     }
 
-    public function testCanThrottleFunctions()
+    public function testCanThrottleFunctions() : void
     {
-        $number = 0;
-        $function = Functions::throttle(function () use (&$number) {
+        $number   = 0;
+        $function = Functions::throttle(function() use (&$number) {
             ++$number;
         }, 1);
 
@@ -87,10 +93,10 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertEquals(2, $number);
     }
 
-    public function testCanPartiallyApplyArguments()
+    public function testCanPartiallyApplyArguments() : void
     {
-        $function = Functions::partial(function () {
-            return implode('', func_get_args());
+        $function = Functions::partial(function() {
+            return implode('', \func_get_args());
         }, 2, null, 6);
 
         $this->assertEquals('246', $function(4));

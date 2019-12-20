@@ -91,7 +91,7 @@ class Method
      *
      * @return string The Methods class
      */
-    public static function getMethodsFromType($class)
+    public static function getMethodsFromType($class) : string
     {
         return str_replace('Types', 'Methods', $class.'Methods');
     }
@@ -103,9 +103,9 @@ class Method
      *
      * @return bool
      */
-    public static function isSubjectless($method)
+    public static function isSubjectless($method) : bool
     {
-        return in_array($method, static::$subjectless, true);
+        return \in_array($method, static::$subjectless, true);
     }
 
     /**
@@ -116,11 +116,11 @@ class Method
      *
      * @return bool
      */
-    public static function isUnchainable($class, $method)
+    public static function isUnchainable($class, $method) : bool
     {
         $class = str_replace('Underscore\Types\\', null, $class);
 
-        return in_array($class.'::'.$method, static::$unchainable, true);
+        return \in_array($class.'::'.$method, static::$unchainable, true);
     }
 
     /**
@@ -130,9 +130,9 @@ class Method
      *
      * @return bool
      */
-    public static function isBreaker($method)
+    public static function isBreaker($method) : bool
     {
-        return in_array($method, static::$breakers, true);
+        return \in_array($method, static::$breakers, true);
     }
 
     /**
@@ -140,9 +140,9 @@ class Method
      *
      * @param string $method The method
      *
-     * @return string The real method name
+     * @return string|null The real method name
      */
-    public static function getAliasOf($method)
+    public static function getAliasOf($method) : ?string
     {
         return Underscore::option('aliases.'.$method);
     }
@@ -154,13 +154,13 @@ class Method
      *
      * @return string The native function
      */
-    public static function getNative($method)
+    public static function getNative($method) : string
     {
         // If a defered method exist
-        if (in_array($method, static::$defer, true)) {
+        if (\in_array($method, static::$defer, true)) {
             $native = array_search($method, static::$defer, true);
 
-            return is_int($native) ? $method : $native;
+            return \is_int($native) ? $method : $native;
         }
 
         return false;
@@ -174,9 +174,9 @@ class Method
      *
      * @return string The class name
      */
-    public static function findInClasses($originalClass, $method)
+    public static function findInClasses($originalClass, $method) : string
     {
-        $classes = ['Arrays', 'Collection', 'Functions', 'Number', 'Object', 'Strings'];
+        $classes = ['Arrays', 'Collection', 'Functions', 'Number', 'BaseObject', 'Strings'];
         foreach ($classes as $class) {
             if (method_exists('\Underscore\Methods\\'.$class.'Methods', $method)) {
                 return '\Underscore\Types\\'.$class;

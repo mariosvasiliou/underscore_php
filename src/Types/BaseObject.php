@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -12,16 +13,17 @@
 namespace Underscore\Types;
 
 use stdClass;
-use Underscore\Methods\ObjectMethods;
+use Underscore\Methods\BaseObjectMethods;
 use Underscore\Traits\Repository;
 
 /**
- * Object repository.
+ * BaseObject repository.
  *
- * @mixin ObjectMethods
+ * @mixin BaseObjectMethods
  */
-class Object extends Repository
+class BaseObject extends Repository
 {
+
     /**
      * The method used to convert new subjects.
      *

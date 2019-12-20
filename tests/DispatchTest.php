@@ -11,13 +11,22 @@
 
 namespace Underscore;
 
-use StdClass;
+use stdClass;
 
+/**
+ * Class DispatchTest
+ *
+ * @package Underscore
+ */
 class DispatchTest extends UnderscoreTestCase
 {
+
     // Data providers ------------------------------------------------ /
 
-    public function provideTypes()
+    /**
+     * @return array
+     */
+    public function provideTypes() : array
     {
         return [
             ['string', 'Strings'],
@@ -26,9 +35,9 @@ class DispatchTest extends UnderscoreTestCase
             [1.2e3, 'Number'],
             [7E-10, 'Number'],
             [[], 'Arrays'],
-            [new StdClass(), 'Object'],
+            [new stdClass(), 'BaseObject'],
             [
-                function () {
+                function() {
                     return;
                 },
                 'Functions',
@@ -39,19 +48,22 @@ class DispatchTest extends UnderscoreTestCase
 
     /**
      * @dataProvider provideTypes
+     *
+     * @param $subject
+     * @param $expected
      */
-    public function testCanGetClassFromType($subject, $expected)
+    public function testCanGetClassFromType($subject, $expected) : void
     {
         $dispatch = Dispatch::toClass($subject);
 
         $this->assertEquals('Underscore\Types\\'.$expected, $dispatch);
     }
 
-    public function testCanThrowExceptionAtUnknownTypes()
+    public function testCanThrowExceptionAtUnknownTypes() : void
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
-        $file = fopen('../.travis.yml', 'w+');
+        $file     = fopen('../.travis.yml', 'w+');
         $dispatch = Dispatch::toClass($file);
     }
 }

@@ -1,3 +1,6 @@
+# Jetbrains files
+.idea
+
 # Tests
 .php_cs.cache
 tests/.coverage

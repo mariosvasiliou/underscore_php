@@ -13,6 +13,11 @@ namespace Underscore\Dummies;
 
 use Underscore\Types\Strings;
 
+/**
+ * Class DummyDefault
+ *
+ * @package Underscore\Dummies
+ */
 class DummyDefault extends Strings
 {
     /**
@@ -30,7 +35,7 @@ class DummyDefault extends Strings
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() : array
     {
         return ['foo', 'bar'];
     }

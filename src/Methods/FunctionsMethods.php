@@ -11,11 +11,14 @@
 
 namespace Underscore\Methods;
 
+use Closure;
+
 /**
  * Methods to manage functions.
  */
 class FunctionsMethods
 {
+
     /**
      * An array of functions to be called X times.
      *
@@ -48,7 +51,7 @@ class FunctionsMethods
      *
      * @return Closure
      */
-    public static function once($function)
+    public static function once($function) : callable
     {
         return static::only($function, 1);
     }
@@ -57,19 +60,19 @@ class FunctionsMethods
      * Create a function that can only be called $times times.
      *
      * @param callable $function
-     * @param int      $times    The number of times
+     * @param          $canBeCalledTimes $times    The number of times
      *
      * @return Closure
      */
-    public static function only($function, $canBeCalledTimes)
+    public static function only($function, $canBeCalledTimes) : callable
     {
         $unique = mt_rand();
 
         // Create a closure that check if the function was already called
-        return function () use ($function, $canBeCalledTimes, $unique) {
+        return function() use ($function, $canBeCalledTimes, $unique) {
 
             // Generate unique hash of the function
-            $arguments = func_get_args();
+            $arguments = \func_get_args();
             $signature = FunctionsMethods::getSignature($unique, $function, $arguments);
 
             // Get counter
@@ -79,11 +82,11 @@ class FunctionsMethods
             // Else, increment the count
             if ($numberOfTimesCalled >= $canBeCalledTimes) {
                 return false;
-            } else {
-                ++FunctionsMethods::$canBeCalledTimes[$signature];
             }
 
-            return call_user_func_array($function, $arguments);
+            ++FunctionsMethods::$canBeCalledTimes[$signature];
+
+            return \call_user_func_array($function, $arguments);
         };
     }
 
@@ -95,15 +98,15 @@ class FunctionsMethods
      *
      * @return Closure
      */
-    public static function after($function, $times)
+    public static function after($function, $times) : callable
     {
         $unique = mt_rand();
 
         // Create a closure that check if the function was already called
-        return function () use ($function, $times, $unique) {
+        return function() use ($function, $times, $unique) {
 
             // Generate unique hash of the function
-            $arguments = func_get_args();
+            $arguments = \func_get_args();
             $signature = FunctionsMethods::getSignature($unique, $function, $arguments);
 
             // Get counter
@@ -111,12 +114,12 @@ class FunctionsMethods
 
             // Prevent calling before a certain number
             if ($called < $times) {
-                FunctionsMethods::$canBeCalledTimes[$signature] += 1;
+                FunctionsMethods::$canBeCalledTimes[$signature]++;
 
                 return false;
             }
 
-            return call_user_func_array($function, $arguments);
+            return \call_user_func_array($function, $arguments);
         };
     }
 
@@ -127,21 +130,21 @@ class FunctionsMethods
      *
      * @return Closure
      */
-    public static function cache($function)
+    public static function cache($function) : callable
     {
         $unique = mt_rand();
 
-        return function () use ($function, $unique) {
+        return function() use ($function, $unique) {
 
             // Generate unique hash of the function
-            $arguments = func_get_args();
+            $arguments = \func_get_args();
             $signature = FunctionsMethods::getSignature($unique, $function, $arguments);
 
             if (isset(FunctionsMethods::$cached[$signature])) {
                 return FunctionsMethods::$cached[$signature];
             }
 
-            $result = call_user_func_array($function, $arguments);
+            $result                               = \call_user_func_array($function, $arguments);
             FunctionsMethods::$cached[$signature] = $result;
 
             return $result;
@@ -156,25 +159,25 @@ class FunctionsMethods
      *
      * @return Closure
      */
-    public static function throttle($function, $ms)
+    public static function throttle($function, $ms) : callable
     {
         $unique = mt_rand();
 
-        return function () use ($function, $ms, $unique) {
+        return function() use ($function, $ms, $unique) {
 
             // Generate unique hash of the function
-            $arguments = func_get_args();
+            $arguments = \func_get_args();
             $signature = FunctionsMethods::getSignature($unique, $function, $arguments);
 
             // Check last called time and update it if necessary
-            $last = FunctionsMethods::getLastCalledTime($signature);
+            $last       = FunctionsMethods::getLastCalledTime($signature);
             $difference = time() - $last;
 
             // Execute the function if the conditions are here
-            if ($last === time() or $difference > $ms) {
+            if ($last === time() || $difference > $ms) {
                 FunctionsMethods::$throttle[$signature] = time();
 
-                return call_user_func_array($function, $arguments);
+                return \call_user_func_array($function, $arguments);
             }
 
             return false;
@@ -190,20 +193,20 @@ class FunctionsMethods
      *
      * @author Jeremy Ashkenas
      */
-    public static function partial(callable $func)
+    public static function partial(callable $func) : callable
     {
-        $boundArgs = array_slice(func_get_args(), 1);
+        $boundArgs = \array_slice(\func_get_args(), 1);
 
-        return function () use ($boundArgs, $func) {
-            $args = [];
-            $calledArgs = func_get_args();
-            $position = 0;
+        return function() use ($boundArgs, $func) {
+            $args       = [];
+            $calledArgs = \func_get_args();
+            $position   = 0;
 
-            for ($i = 0, $len = count($boundArgs); $i < $len; ++$i) {
-                $args[] = $boundArgs[$i] === null ? $calledArgs[$position++] : $boundArgs[$i];
+            foreach ($boundArgs as $i => $iValue) {
+                $args[] = $iValue === null ? $calledArgs[$position++] : $boundArgs[$i];
             }
 
-            return call_user_func_array($func, array_merge($args, array_slice($calledArgs, $position)));
+            return \call_user_func_array($func, array_merge($args, \array_slice($calledArgs, $position)));
         };
     }
 
@@ -218,7 +221,7 @@ class FunctionsMethods
      *
      * @return int
      */
-    public static function getLastCalledTime($unique)
+    public static function getLastCalledTime($unique) : int
     {
         return ArraysMethods::setAndGet(static::$canBeCalledTimes, $unique, time());
     }
@@ -230,7 +233,7 @@ class FunctionsMethods
      *
      * @return int
      */
-    public static function hasBeenCalledTimes($unique)
+    public static function hasBeenCalledTimes($unique) : int
     {
         return ArraysMethods::setAndGet(static::$canBeCalledTimes, $unique, 0);
     }
@@ -238,14 +241,15 @@ class FunctionsMethods
     /**
      * Get a function's signature.
      *
+     * @param         $unique
      * @param Closure $function  The function
      * @param array   $arguments Its arguments
      *
      * @return string The unique id
      */
-    public static function getSignature($unique, $function, $arguments)
+    public static function getSignature($unique, $function, $arguments) : string
     {
-        $function = var_export($function, true);
+        $function  = var_export($function, true);
         $arguments = var_export($arguments, true);
 
         return md5($unique.'_'.$function.'_'.$arguments);

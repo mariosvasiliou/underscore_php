@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -80,21 +81,29 @@ abstract class Repository
     /**
      * Create a new Repository.
      */
-    public static function create()
+    public static function create() : Repository
     {
         return new static();
     }
 
     /**
      * Create a new Repository from a subject.
+     *
+     * @param $subject
+     *
+     * @return Repository
      */
-    public static function from($subject)
+    public static function from($subject) : Repository
     {
         return new static($subject);
     }
 
     /**
      * Get a key from the subject.
+     *
+     * @param $key
+     *
+     * @return mixed
      */
     public function __get($key)
     {
@@ -103,6 +112,9 @@ abstract class Repository
 
     /**
      * Set a value on the subject.
+     *
+     * @param $key
+     * @param $value
      */
     public function __set($key, $value)
     {
@@ -114,7 +126,7 @@ abstract class Repository
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty() : bool
     {
         return empty($this->subject);
     }
@@ -123,8 +135,10 @@ abstract class Repository
      * Replace the Subject while maintaining chain.
      *
      * @param mixed $value
+     *
+     * @return Repository
      */
-    public function setSubject($value)
+    public function setSubject($value) : Repository
     {
         $this->subject = $value;
 
@@ -147,9 +161,9 @@ abstract class Repository
      * @param string   $method  The macro's name
      * @param callable $closure The macro
      */
-    public static function extend($method, $closure)
+    public static function extend($method, $closure) : void
     {
-        static::$macros[get_called_class()][$method] = $closure;
+        static::$macros[static::class][$method] = $closure;
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -158,11 +172,16 @@ abstract class Repository
 
     /**
      * Catch aliases and reroute them to the right methods.
+     *
+     * @param $method
+     * @param $parameters
+     *
+     * @return mixed
      */
     public static function __callStatic($method, $parameters)
     {
         // Get base class and methods class
-        $callingClass = static::computeClassToCall(get_called_class(), $method, $parameters);
+        $callingClass = static::computeClassToCall(static::class, $method, $parameters);
         $methodsClass = Method::getMethodsFromType($callingClass);
 
         // Defer to Methods class
@@ -171,23 +190,26 @@ abstract class Repository
         }
 
         // Check for an alias
-        if ($alias = Method::getAliasOf($method)) {
+        $alias = Method::getAliasOf($method);
+        if ($alias) {
             return self::callMethod($methodsClass, $alias, $parameters);
         }
 
         // Check for parsers
-        if (method_exists('Underscore\Parse', $method)) {
-            return self::callMethod('Underscore\Parse', $method, $parameters);
+        if (method_exists(Parse::class, $method)) {
+            return self::callMethod(Parse::class, $method, $parameters);
         }
 
         // Defered methods
-        if ($defered = Dispatch::toNative($callingClass, $method)) {
-            return call_user_func_array($defered, $parameters);
+        $defered = Dispatch::toNative($callingClass, $method);
+        if ($defered) {
+            return \call_user_func_array($defered, $parameters);
         }
 
         // Look in the macros
-        if ($macro = ArraysMethods::get(static::$macros, $callingClass.'.'.$method)) {
-            return call_user_func_array($macro, $parameters);
+        $macro = ArraysMethods::get(static::$macros, $callingClass.'.'.$method);
+        if ($macro) {
+            return \call_user_func_array($macro, $parameters);
         }
 
         throw new BadMethodCallException('The method '.$callingClass.'::'.$method.' does not exist');
@@ -195,6 +217,11 @@ abstract class Repository
 
     /**
      * Allow the chained calling of methods.
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return Repository
      */
     public function __call($method, $arguments)
     {
@@ -207,7 +234,7 @@ abstract class Repository
         }
 
         // Prepend subject to arguments and call the method
-        if (!Method::isSubjectless($method)) {
+        if ( ! Method::isSubjectless($method)) {
             array_unshift($arguments, $this->subject);
         }
         $result = $class::__callStatic($method, $arguments);
@@ -215,9 +242,9 @@ abstract class Repository
         // If the method is a breaker, return just the result
         if (Method::isBreaker($method)) {
             return $result;
-        } else {
-            $this->subject = $result;
         }
+
+        $this->subject = $result;
 
         return $this;
     }
@@ -235,12 +262,13 @@ abstract class Repository
      *
      * @return string The correct class
      */
-    protected static function computeClassToCall($callingClass, $method, $arguments)
+    protected static function computeClassToCall($callingClass, $method, $arguments) : string
     {
-        if (!StringsMethods::find($callingClass, 'Underscore\Types')) {
+        if ( ! StringsMethods::find($callingClass, 'Underscore\Types')) {
             if (isset($arguments[0])) {
                 $callingClass = Dispatch::toClass($arguments[0]);
-            } else {
+            }
+            else {
                 $callingClass = Method::findInClasses($callingClass, $method);
             }
         }
@@ -254,10 +282,12 @@ abstract class Repository
      * @param string $class      The class
      * @param string $method     The method
      * @param array  $parameters The arguments
+     *
+     * @return mixed
      */
     protected static function callMethod($class, $method, $parameters)
     {
-        switch (count($parameters)) {
+        switch (\count($parameters)) {
             case 0:
                 return $class::$method();
             case 1:

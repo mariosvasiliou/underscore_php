@@ -25,8 +25,13 @@ abstract class CollectionMethods
 
     /**
      * Check if an array has a given key.
+     *
+     * @param $array
+     * @param $key
+     *
+     * @return bool
      */
-    public static function has($array, $key)
+    public static function has($array, $key) : bool
     {
         // Generate unique string to use as marker
         $unfound = StringsMethods::random(5);
@@ -49,7 +54,7 @@ abstract class CollectionMethods
      */
     public static function get($collection, $key, $default = null)
     {
-        if (is_null($key)) {
+        if ($key === null) {
             return $collection;
         }
 
@@ -110,11 +115,16 @@ abstract class CollectionMethods
 
     /**
      * Remove a value from an array using dot notation.
+     *
+     * @param $collection
+     * @param $key
+     *
+     * @return mixed
      */
     public static function remove($collection, $key)
     {
         // Recursive call
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k) {
                 static::internalRemove($collection, $k);
             }
@@ -129,6 +139,11 @@ abstract class CollectionMethods
 
     /**
      * Fetches all columns $property from a multimensionnal array.
+     *
+     * @param $collection
+     * @param $property
+     *
+     * @return array|object
      */
     public static function pluck($collection, $property)
     {
@@ -137,24 +152,28 @@ abstract class CollectionMethods
         }, (array) $collection);
 
         // Convert back to object if necessary
-        if (is_object($collection)) {
-            $plucked = (object) $plucked;
+        if (\is_object($collection)) {
+            $plucked = (object)$plucked;
         }
 
         return $plucked;
     }
 
     /**
-     * Filters an array of objects (or a numeric array of associative arrays) based on the value of a particular property within that.
+     * Filters an array of objects (or a numeric array of associative arrays) based on the value of a particular
+     * property within that.
      *
-     * @param string $property
-     * @param string $value
-     * @param string $comparisonOp
+     * @param              $collection
+     * @param string       $property
+     * @param array|string $value
+     * @param string       $comparisonOp
+     *
+     * @return array|object
      */
     public static function filterBy($collection, $property, $value, $comparisonOp = null)
     {
         if (!$comparisonOp) {
-            $comparisonOp = is_array($value) ? 'contains' : 'eq';
+            $comparisonOp = \is_array($value) ? 'contains' : 'eq';
         }
         $ops = [
             'eq' => function ($item, $prop, $value) {
@@ -176,10 +195,10 @@ abstract class CollectionMethods
                 return $item[$prop] !== $value;
             },
             'contains' => function ($item, $prop, $value) {
-                return in_array($item[$prop], (array) $value, true);
+                return \in_array($item[$prop], (array)$value, true);
             },
             'notContains' => function ($item, $prop, $value) {
-                return !in_array($item[$prop], (array) $value, true);
+                return ! \in_array($item[$prop], (array)$value, true);
             },
             'newer' => function ($item, $prop, $value) {
                 return strtotime($item[$prop]) > strtotime($value);
@@ -199,13 +218,21 @@ abstract class CollectionMethods
 
             return $ops[$comparisonOp]($item, $property, $value);
         }));
-        if (is_object($collection)) {
-            $result = (object) $result;
+        if (\is_object($collection)) {
+            $result = (object)$result;
         }
 
         return $result;
     }
 
+    /**
+     * @param        $collection
+     * @param        $property
+     * @param        $value
+     * @param string $comparisonOp
+     *
+     * @return array|mixed
+     */
     public static function findBy($collection, $property, $value, $comparisonOp = 'eq')
     {
         $filtered = static::filterBy($collection, $property, $value, $comparisonOp);
@@ -219,18 +246,26 @@ abstract class CollectionMethods
 
     /**
      * Get all keys from a collection.
+     *
+     * @param $collection
+     *
+     * @return array
      */
-    public static function keys($collection)
+    public static function keys($collection) : array
     {
-        return array_keys((array) $collection);
+        return array_keys((array)$collection);
     }
 
     /**
      * Get all values from a collection.
+     *
+     * @param $collection
+     *
+     * @return array
      */
-    public static function values($collection)
+    public static function values($collection) : array
     {
-        return array_values((array) $collection);
+        return array_values((array)$collection);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -239,6 +274,13 @@ abstract class CollectionMethods
 
     /**
      * Replace a key with a new key/value pair.
+     *
+     * @param $collection
+     * @param $replace
+     * @param $key
+     * @param $value
+     *
+     * @return mixed
      */
     public static function replace($collection, $replace, $key, $value)
     {
@@ -251,18 +293,24 @@ abstract class CollectionMethods
     /**
      * Sort a collection by value, by a closure or by a property
      * If the sorter is null, the collection is sorted naturally.
+     *
+     * @param        $collection
+     * @param null   $sorter
+     * @param string $direction
+     *
+     * @return array
      */
-    public static function sort($collection, $sorter = null, $direction = 'asc')
+    public static function sort($collection, $sorter = null, $direction = 'asc') : array
     {
-        $collection = (array) $collection;
+        $collection = (array)$collection;
 
         // Get correct PHP constant for direction
         $direction = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
 
         // Transform all values into their results
         if ($sorter) {
-            $results = ArraysMethods::each($collection, function ($value) use ($sorter) {
-                return is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter);
+            $results = ArraysMethods::each($collection, function($value) use ($sorter) {
+                return \is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter);
             });
         } else {
             $results = $collection;
@@ -276,15 +324,21 @@ abstract class CollectionMethods
 
     /**
      * Group values from a collection according to the results of a closure.
+     *
+     * @param      $collection
+     * @param      $grouper
+     * @param bool $saveKeys
+     *
+     * @return array
      */
-    public static function group($collection, $grouper, $saveKeys = false)
+    public static function group($collection, $grouper, $saveKeys = false) : array
     {
-        $collection = (array) $collection;
-        $result = [];
+        $collection = (array)$collection;
+        $result     = [];
 
         // Iterate over values, group by property/results from closure
         foreach ($collection as $key => $value) {
-            $groupKey = is_callable($grouper) ? $grouper($value, $key) : ArraysMethods::get($value, $grouper);
+            $groupKey = \is_callable($grouper) ? $grouper($value, $key) : ArraysMethods::get($value, $grouper);
             $newValue = static::get($result, $groupKey);
 
             // Add to results
@@ -306,10 +360,16 @@ abstract class CollectionMethods
 
     /**
      * Internal mechanic of set method.
+     *
+     * @param $collection
+     * @param $key
+     * @param $value
+     *
+     * @return mixed
      */
     protected static function internalSet(&$collection, $key, $value)
     {
-        if (is_null($key)) {
+        if ($key === null) {
             return $collection = $value;
         }
 
@@ -317,31 +377,38 @@ abstract class CollectionMethods
         $keys = explode('.', $key);
 
         // Crawl through the keys
-        while (count($keys) > 1) {
+        while (\count($keys) > 1) {
             $key = array_shift($keys);
 
             // If we're dealing with an object
-            if (is_object($collection)) {
-                $collection->$key = static::get($collection, $key, []);
-                $collection = &$collection->$key;
+            if (\is_object($collection)) {
+                $collection->{$key} = static::get($collection, $key, []);
+                $collection         = &$collection->{$key};
                 // If we're dealing with an array
-            } else {
+            }
+            else {
                 $collection[$key] = static::get($collection, $key, []);
-                $collection = &$collection[$key];
+                $collection       = &$collection[$key];
             }
         }
 
         // Bind final tree on the collection
         $key = array_shift($keys);
-        if (is_array($collection)) {
+        if (\is_array($collection)) {
             $collection[$key] = $value;
-        } else {
-            $collection->$key = $value;
+        }
+        else {
+            $collection->{$key} = $value;
         }
     }
 
     /**
      * Internal mechanics of remove method.
+     *
+     * @param $collection
+     * @param $key
+     *
+     * @return mixed
      */
     protected static function internalRemove(&$collection, $key)
     {
@@ -349,26 +416,28 @@ abstract class CollectionMethods
         $keys = explode('.', $key);
 
         // Crawl though the keys
-        while (count($keys) > 1) {
+        while (\count($keys) > 1) {
             $key = array_shift($keys);
 
-            if (!static::has($collection, $key)) {
+            if ( ! static::has($collection, $key)) {
                 return false;
             }
 
             // If we're dealing with an object
-            if (is_object($collection)) {
-                $collection = &$collection->$key;
+            if (\is_object($collection)) {
+                $collection = &$collection->{$key};
                 // If we're dealing with an array
-            } else {
+            }
+            else {
                 $collection = &$collection[$key];
             }
         }
 
         $key = array_shift($keys);
-        if (is_object($collection)) {
-            unset($collection->$key);
-        } else {
+        if (\is_object($collection)) {
+            unset($collection->{$key});
+        }
+        else {
             unset($collection[$key]);
         }
     }
@@ -384,7 +453,7 @@ abstract class CollectionMethods
      *
      * @return array
      */
-    public static function indexBy(array $array, $key)
+    public static function indexBy(array $array, $key) : array
     {
         $results = [];
 

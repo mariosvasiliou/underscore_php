@@ -37,7 +37,7 @@ class Underscore extends Repository
      *
      * @return Repository
      */
-    public static function from($subject)
+    public static function from($subject) : Repository
     {
         $class = Dispatch::toClass($subject);
 
@@ -59,7 +59,7 @@ class Underscore extends Repository
     {
         // Get config file
         if (!static::$options) {
-            static::$options = include __DIR__.'/../config/config.php';
+            static::$options = include __DIR__.'/../config/underscore.php';
         }
 
         return ArraysMethods::get(static::$options, $option);
