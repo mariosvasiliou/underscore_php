@@ -14,8 +14,6 @@ branches:
     - stable
 before_script:
   - cp .env.travis .env
-  - chmod -R 777 storage/
-  - chmod -R 777 bootstrap/cache/
   - composer self-update
   - composer install --no-interaction
 script:
