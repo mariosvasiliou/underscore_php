@@ -1,11 +1,11 @@
 # Underscore.php
 
-[![Build Status](http://img.shields.io/travis/Anahkiasen/underscore-php.svg?style=flat)](https://travis-ci.org/Anahkiasen/underscore-php)
-[![Latest Stable Version](http://img.shields.io/packagist/v/anahkiasen/underscore-php.svg?style=flat)](https://packagist.org/packages/anahkiasen/underscore-php)
-[![Total Downloads](http://img.shields.io/packagist/dt/anahkiasen/underscore-php.svg?style=flat)](https://packagist.org/packages/anahkiasen/underscore-php)
-[![Scrutinizer Quality Score](http://img.shields.io/scrutinizer/g/Anahkiasen/underscore-php.svg?style=flat)](https://scrutinizer-ci.com/g/Anahkiasen/underscore-php/)
-[![Code Coverage](http://img.shields.io/scrutinizer/coverage/g/Anahkiasen/underscore-php.svg?style=flat)](https://scrutinizer-ci.com/g/Anahkiasen/underscore-php/)
-[![Support via Gittip](http://img.shields.io/gittip/Anahkiasen.svg?style=flat)](https://www.gittip.com/Anahkiasen/)
+[![Build Status](https://travis-ci.org/mariosvasiliou/underscore_php.svg?branch=master)](https://travis-ci.org/mariosvasiliou/underscore_php)
+[![Latest Stable Version](http://img.shields.io/packagist/v/mariosvasiliou/underscore_php.svg?style=flat)](https://packagist.org/packages/mariosvasiliou/underscore_php)
+[![Total Downloads](http://img.shields.io/packagist/dt/mariosvasiliou/underscore_php.svg?style=flat)](https://packagist.org/packages/mariosvasiliou/underscore_php)
+[![Scrutinizer Quality Score](http://img.shields.io/scrutinizer/g/mariosvasiliou/underscore_php.svg?style=flat)](https://scrutinizer-ci.com/g/mariosvasiliou/underscore_php/)
+[![Code Coverage](http://img.shields.io/scrutinizer/coverage/g/mariosvasiliou/underscore_php.svg?style=flat)](https://scrutinizer-ci.com/g/mariosvasiliou/underscore_php/)
+
 
 ## The PHP manipulation toolbelt
 
