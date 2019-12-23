@@ -152,9 +152,9 @@ class Method
      *
      * @param string $method The method to look for
      *
-     * @return string The native function
+     * @return string|false The native function
      */
-    public static function getNative($method) : string
+    public static function getNative($method)
     {
         // If a defered method exist
         if (\in_array($method, static::$defer, true)) {

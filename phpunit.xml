@@ -22,4 +22,30 @@
 			<directory suffix=".php">tests</directory>
 		</testsuite>
 	</testsuites>
+
+	<logging>
+		<log type="coverage-html"
+			 target="./storage/tests/html/report.html"
+			 lowUpperBound="25"
+			 highLowerBound="70"
+			 charset="UTF-8"
+			 highlight="true"
+			 showUncoveredFiles="true"
+			 logIncompleteSkipped="true"
+		/>
+		<log type="coverage-text"
+			 target="php://stdout"
+			 showUncoveredFiles="true"
+			 logIncompleteSkipped="true"
+			 showOnlySummary="true"
+			 highlight="true"
+			 charset="UTF-8"/>
+		<log type="junit" target="./storage/tests/logfile.xml" logIncompleteSkipped="false"/>
+		<log type="coverage-clover" target="./storage/tests/coverage.xml"/>
+		<log type="coverage-php" target="./storage/tests/coverage.serialized"/>
+		<log type="coverage-crap4j" target="./storage/tests/crap4j.xml"/>
+
+		<log type="testdox-html" target="./storage/tests/testdox.html"/>
+		<log type="testdox-text" target="./storage/tests/testdox.txt"/>
+	</logging>
 </phpunit>

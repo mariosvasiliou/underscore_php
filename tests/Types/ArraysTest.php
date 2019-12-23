@@ -593,9 +593,9 @@ class ArraysTest extends UnderscoreTestCase
 
         $this->assertTrue(Arrays::intersects($a, $b));
 
-        $a = 'bar';
+        $a = ['bar'];
         $this->assertTrue(Arrays::intersects($a, $b));
-        $a = 'foo';
+        $a = ['foo'];
         $this->assertFalse(Arrays::intersects($a, $b));
     }
 

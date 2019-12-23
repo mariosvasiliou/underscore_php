@@ -27,6 +27,7 @@ atlassian-ide-plugin.xml
 # Tests
 .php_cs.cache
 tests/.coverage
+/storage/tests/
 
 # Dependencies
 composer.lock

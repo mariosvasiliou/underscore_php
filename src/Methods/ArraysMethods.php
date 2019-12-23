@@ -55,9 +55,9 @@ class ArraysMethods extends CollectionMethods
      *
      * @return array
      */
-    public static function repeat($data, $times) : array
+    public static function repeat($data, int $times) : array
     {
-        $times = abs($times);
+        $times = (int)(abs($times));
         if ($times === 0) {
             return [];
         }
@@ -112,7 +112,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return bool
      */
-    public static function matchesAny($array, callable $closure) : bool
+    public static function matchesAny(array $array, callable $closure) : bool
     {
         // Reduce the array to only booleans
         $array = static::each($array, $closure);
@@ -145,9 +145,9 @@ class ArraysMethods extends CollectionMethods
      * @param array $array    The source array
      * @param int   $decimals The number of decimals to return
      *
-     * @return int The average value
+     * @return float The average value
      */
-    public static function average($array, $decimals = 0) : int
+    public static function average(array $array, int $decimals = 0) : float
     {
         return round((array_sum($array) / \count($array)), $decimals);
     }
@@ -155,11 +155,11 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the size of an array.
      *
-     * @param $array
+     * @param array $array
      *
      * @return int
      */
-    public static function size($array) : int
+    public static function size(array $array) : int
     {
         return \count($array);
     }
@@ -172,7 +172,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return mixed
      */
-    public static function max($array, $closure = null)
+    public static function max(array $array, $closure = null)
     {
         // If we have a closure, apply it to the array
         if ($closure) {
@@ -190,7 +190,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return mixed
      */
-    public static function min($array, $closure = null)
+    public static function min(array $array, $closure = null)
     {
         // If we have a closure, apply it to the array
         if ($closure) {
@@ -207,12 +207,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Find the first item in an array that passes the truth test.
      *
-     * @param         $array
+     * @param array   $array
      * @param Closure $closure
      *
      * @return mixed|void
      */
-    public static function find($array, Closure $closure)
+    public static function find(array $array, Closure $closure)
     {
         foreach ($array as $key => $value) {
             if ($closure($value, $key)) {
@@ -226,11 +226,11 @@ class ArraysMethods extends CollectionMethods
     /**
      * Clean all falsy values from an array.
      *
-     * @param $array
+     * @param array $array
      *
      * @return array|mixed
      */
-    public static function clean($array)
+    public static function clean(array $array)
     {
         return static::filter($array, function($value) {
             return (bool)$value;
@@ -240,12 +240,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get a random string from an array.
      *
-     * @param      $array
-     * @param null $take
+     * @param array    $array
+     * @param int|null $take
      *
      * @return array|mixed
      */
-    public static function random($array, $take = null)
+    public static function random(array $array, int $take = null)
     {
         if ( ! $take) {
             return $array[array_rand($array)];
@@ -276,12 +276,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Return an array with all elements found in both input arrays.
      *
-     * @param $a
-     * @param $b
+     * @param array $a
+     * @param array $b
      *
      * @return array
      */
-    public static function intersection($a, $b) : array
+    public static function intersection(array $a, array $b) : array
     {
         $a = (array)$a;
         $b = (array)$b;
@@ -292,12 +292,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Return a boolean flag which indicates whether the two input arrays have any common elements.
      *
-     * @param $a
-     * @param $b
+     * @param array $a
+     * @param array $b
      *
      * @return bool
      */
-    public static function intersects($a, $b) : bool
+    public static function intersects(array $a, array $b) : bool
     {
         $a = (array)$a;
         $b = (array)$b;
@@ -312,12 +312,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the first value from an array.
      *
-     * @param      $array
-     * @param null $take
+     * @param array    $array
+     * @param int|null $take
      *
      * @return array|mixed
      */
-    public static function first($array, $take = null)
+    public static function first(array $array, int $take = null)
     {
         if ( ! $take) {
             return array_shift($array);
@@ -329,12 +329,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the last value from an array.
      *
-     * @param      $array
-     * @param null $take
+     * @param array    $array
+     * @param int|null $take
      *
      * @return array|mixed
      */
-    public static function last($array, $take = null)
+    public static function last(array $array, int $take = null)
     {
         if ( ! $take) {
             return array_pop($array);
@@ -346,12 +346,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get everything but the last $to items.
      *
-     * @param     $array
-     * @param int $to
+     * @param array $array
+     * @param int   $to
      *
      * @return array|mixed
      */
-    public static function initial($array, $to = 1)
+    public static function initial(array $array, $to = 1)
     {
         $slice = \count($array) - $to;
 
@@ -361,12 +361,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the last elements from index $from.
      *
-     * @param     $array
-     * @param int $from
+     * @param array $array
+     * @param int   $from
      *
      * @return array
      */
-    public static function rest($array, $from = 1) : array
+    public static function rest(array $array, $from = 1) : array
     {
         return array_splice($array, $from);
     }
@@ -378,12 +378,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Iterate over an array and execute a callback for each loop.
      *
-     * @param         $array
+     * @param array   $array
      * @param Closure $closure
      *
      * @return array
      */
-    public static function at($array, Closure $closure) : array
+    public static function at(array $array, Closure $closure) : array
     {
         foreach ($array as $key => $value) {
             $closure($value, $key);
@@ -405,7 +405,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return array
      */
-    public static function replaceValue($array, $replace, $with) : array
+    public static function replaceValue(array $array, string $replace, string $with) : array
     {
         return static::each($array, function($value) use ($replace, $with) {
             return str_replace($replace, $with, $value);
@@ -420,7 +420,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return array
      */
-    public static function replaceKeys($array, $keys) : array
+    public static function replaceKeys(array $array, array $keys) : array
     {
         $values = array_values($array);
 
@@ -430,12 +430,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Iterate over an array and modify the array's value.
      *
-     * @param         $array
+     * @param array   $array
      * @param Closure $closure
      *
      * @return array
      */
-    public static function each($array, Closure $closure) : array
+    public static function each(array $array, Closure $closure) : array
     {
         foreach ($array as $key => $value) {
             $array[$key] = $closure($value, $key);
@@ -447,11 +447,11 @@ class ArraysMethods extends CollectionMethods
     /**
      * Shuffle an array.
      *
-     * @param $array
+     * @param array $array
      *
-     * @return
+     * @return array
      */
-    public static function shuffle($array)
+    public static function shuffle(array $array) : array
     {
         shuffle($array);
 
@@ -461,12 +461,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Sort an array by key.
      *
-     * @param        $array
+     * @param array  $array
      * @param string $direction
      *
      * @return array
      */
-    public static function sortKeys($array, $direction = 'ASC') : array
+    public static function sortKeys(array $array, string $direction = 'ASC') : array
     {
         $direction = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
         if ($direction === SORT_ASC) {
@@ -495,12 +495,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Find all items in an array that pass the truth test.
      *
-     * @param               $array
+     * @param array         $array
      * @param callable|null $closure
      *
      * @return array|mixed
      */
-    public static function filter($array, $closure = null)
+    public static function filter(array $array, $closure = null)
     {
         if ( ! $closure) {
             return static::clean($array);
@@ -518,7 +518,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return string|array Flattened array to one level
      */
-    public static function flatten($array, $separator = '.', $parent = null)
+    public static function flatten(array $array, string $separator = '.', string $parent = null)
     {
         if ( ! \is_array($array)) {
             return $array;
@@ -530,6 +530,10 @@ class ArraysMethods extends CollectionMethods
         foreach ($array as $key => $value) {
             if ($parent) {
                 $key = $parent.$separator.$key;
+            }
+            if ( ! \is_array($value)) {
+                $_flattened[$key] = $value;
+                continue;
             }
             $_flattened[$key] = static::flatten($value, $separator, $key);
         }
@@ -551,13 +555,13 @@ class ArraysMethods extends CollectionMethods
     /**
      * Invoke a function on all of an array's values.
      *
-     * @param array    $array
-     * @param callable $callable
-     * @param array    $arguments
+     * @param array        $array
+     * @param callable     $callable
+     * @param array|string $arguments
      *
      * @return array
      */
-    public static function invoke($array, $callable, $arguments = []) : array
+    public static function invoke(array $array, $callable, $arguments = []) : array
     {
         // If one argument given for each iteration, create an array for it
         if ( ! \is_array($arguments)) {
@@ -575,12 +579,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Return all items that fail the truth test.
      *
-     * @param         $array
+     * @param array   $array
      * @param Closure $closure
      *
      * @return array
      */
-    public static function reject($array, Closure $closure) : array
+    public static function reject(array $array, Closure $closure) : array
     {
         $filtered = [];
 
@@ -596,11 +600,11 @@ class ArraysMethods extends CollectionMethods
     /**
      * Remove the first value from an array.
      *
-     * @param $array
+     * @param array $array
      *
      * @return array
      */
-    public static function removeFirst($array) : array
+    public static function removeFirst(array $array) : array
     {
         array_shift($array);
 
@@ -610,11 +614,11 @@ class ArraysMethods extends CollectionMethods
     /**
      * Remove the last value from an array.
      *
-     * @param $array
+     * @param array $array
      *
      * @return array
      */
-    public static function removeLast($array) : array
+    public static function removeLast(array $array) : array
     {
         array_pop($array);
 
@@ -629,7 +633,7 @@ class ArraysMethods extends CollectionMethods
      *
      * @return array
      */
-    public static function removeValue($array, $value) : array
+    public static function removeValue(array $array, string $value) : array
     {
         $isNumericArray = true;
         foreach ($array as $key => $item) {
