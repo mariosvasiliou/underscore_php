@@ -1,9 +1,11 @@
 dist: xenial
 language: php
+
 php:
   - 7.1
 cache:
   directories:
+    - $HOME/.yarn-cache
     - node_modules
     - vendor
 branches:
@@ -12,6 +14,8 @@ branches:
     - stable
 before_script:
   - cp .env.travis .env
+  - chmod -R 777 storage/
+  - chmod -R 777 bootstrap/cache/
   - composer self-update
   - composer install --no-interaction
 script:

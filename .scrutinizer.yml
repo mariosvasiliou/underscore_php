@@ -1,0 +1,21 @@
+build:
+  environment:
+    php: '7.1'
+  cache:
+    directories:
+      - node_modules
+      - vendor/
+      - ~/.composer/cache/
+  dependencies:
+    before:
+      - composer self-update
+      - composer install --no-interaction
+  tests:
+    before:
+      - chmod -R 777 storage
+      - chmod -R 777 bootstrap/cache
+    override:
+      - command: vendor/bin/phpunit --coverage-clover=laravel-tests-coverage
+        coverage:
+          file: laravel-tests-coverage
+          format: clover
