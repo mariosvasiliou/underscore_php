@@ -520,10 +520,6 @@ class ArraysMethods extends CollectionMethods
      */
     public static function flatten(array $array, string $separator = '.', string $parent = null)
     {
-        if ( ! \is_array($array)) {
-            return $array;
-        }
-
         $_flattened = [];
 
         // Rewrite keys
