@@ -1,5 +1,28 @@
-# Jetbrains files
+### Laravel template
+/vendor
+.env.php
+.env
+composer.phar
+.DS_Store
+Thumbs.db
+
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
+
+## Directory-based project format:
 .idea
+
+## File-based project format:
+*.ipr
+*.iws
+
+## Plugin-specific files:
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
 
 # Tests
 .php_cs.cache

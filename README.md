@@ -129,6 +129,8 @@ The advantage is obviously that it allows chaining on a lot of otherwise one-off
 Arrays::diff($array, $array2, $array3) // Calls `array_diff`
 Arrays::from($array)->diff($array2, $array3)->merge($array4) // Calls `array_diff` then `array_merge` on the result
 ```
+## Requirements
+PHP 7.1+
 
 ## Documentation
 
@@ -144,7 +146,7 @@ This revamped Underscore.php doesn't aim to be a direct port of Underscore.js. I
 If you come from Javascript and are confused by some of the changes, don't put all the blame on me for trying to mess everything up. A basic example is the `map` function : in PHP it has a completely different sense because there exists an `array_map` function that basically does what `__::invoke` does in JS. So `map` is now `Arrays::each`.
 Always keep in mind this was made for _PHP_ developpers first, and differences **do** exist between the two to accomdate the common terms in PHP.
 
-[CHANGELOG]: https://github.com/Anahkiasen/underscore-php/blob/master/CHANGELOG.md
+[CHANGELOG]: https://github.com/mariosvasiliou/underscore_php/blob/master/CHANGELOG.md
 [official page]: http://anahkiasen.github.com/underscore-php/
 [Laravel framework]: http://laravel.com/
 [Underscore.js]: https://github.com/documentcloud/underscore
