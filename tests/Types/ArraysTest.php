@@ -656,7 +656,7 @@ class ArraysTest extends UnderscoreTestCase
         ];
 
         $b = Arrays::findBy($a, 'name', 'baz');
-        $this->assertInternalType('array', $b);
+        $this->assertIsArray($b);
         $this->assertCount(4, $b); // this is counting the number of keys in the array (id,name,group,value)
         $this->assertSame(2365, $b['value']);
         $this->assertArrayHasKey('name', $b);
@@ -664,17 +664,17 @@ class ArraysTest extends UnderscoreTestCase
         $this->assertArrayHasKey('value', $b);
 
         $c = Arrays::findBy($a, 'value', 2468);
-        $this->assertInternalType('array', $c);
+        $this->assertIsArray($c);
         $this->assertCount(4, $c);
         $this->assertSame('primary', $c['group']);
 
         $d = Arrays::findBy($a, 'group', 'primary');
-        $this->assertInternalType('array', $d);
+        $this->assertIsArray($d);
         $this->assertCount(4, $d);
         $this->assertSame('foo', $d['name']);
 
         $e = Arrays::findBy($a, 'value', 2000, 'lt');
-        $this->assertInternalType('array', $e);
+        $this->assertIsArray($e);
         $this->assertCount(4, $e);
         $this->assertSame(1468, $e['value']);
     }
