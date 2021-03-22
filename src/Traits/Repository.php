@@ -73,7 +73,7 @@ abstract class Repository
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return Parse::toString($this->subject);
     }

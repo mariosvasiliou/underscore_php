@@ -32,26 +32,26 @@ class ObjectTest extends UnderscoreTestCase
     public function testCanObjectifyAnArray() : void
     {
         $object = BaseObject::from(['foo' => 'bar']);
-        $this->assertEquals('bar', $object->foo);
+        $this->assertSame('bar', $object->foo);
 
         $object->bis = 'ter';
-        $this->assertEquals('ter', $object->bis);
+        $this->assertSame('ter', $object->bis);
 
-        $this->assertEquals(['foo' => 'bar', 'bis' => 'ter'], (array)$object->obtain());
+        $this->assertSame(['foo' => 'bar', 'bis' => 'ter'], (array)$object->obtain());
     }
 
     public function testCanGetKeys() : void
     {
         $object = BaseObject::keys($this->object);
 
-        $this->assertEquals(['foo', 'bis'], $object);
+        $this->assertSame(['foo', 'bis'], $object);
     }
 
     public function testCanGetValues() : void
     {
         $object = BaseObject::values($this->object);
 
-        $this->assertEquals(['bar', 'ter'], $object);
+        $this->assertSame(['bar', 'ter'], $object);
     }
 
     public function testCanGetMethods() : void
@@ -73,7 +73,7 @@ class ObjectTest extends UnderscoreTestCase
             '__call',
         ];
 
-        $this->assertEquals($methods, BaseObject::methods(new DummyDefault()));
+        $this->assertSame($methods, BaseObject::methods(new DummyDefault()));
     }
 
     public function testCanPluckColumns() : void
@@ -81,7 +81,7 @@ class ObjectTest extends UnderscoreTestCase
         $object  = BaseObject::pluck($this->objectMulti, 'foo');
         $matcher = (object)['bar', 'bar', null];
 
-        $this->assertEquals($matcher, $object);
+        $this->assertEqualsCanonicalizing($matcher, $object);
     }
 
     public function testCanSetValues() : void
@@ -89,7 +89,7 @@ class ObjectTest extends UnderscoreTestCase
         $object = (object)['foo' => ['foo' => 'bar'], 'bar' => 'bis'];
         $object = BaseObject::set($object, 'foo.bar.bis', 'ter');
 
-        $this->assertEquals('ter', $object->foo['bar']['bis']);
+        $this->assertSame('ter', $object->foo['bar']['bis']);
         $this->assertObjectHasAttribute('bar', $object);
     }
 
@@ -99,14 +99,14 @@ class ObjectTest extends UnderscoreTestCase
         $matcher = (array)$this->objectMulti;
         unset($matcher[0]->foo);
 
-        $this->assertEquals((object)$matcher, $array);
+        $this->assertEqualsCanonicalizing((object)$matcher, $array);
     }
 
     public function testCanConvertToJson() : void
     {
         $under = BaseObject::toJSON($this->object);
 
-        $this->assertEquals('{"foo":"bar","bis":"ter"}', $under);
+        $this->assertSame('{"foo":"bar","bis":"ter"}', $under);
     }
 
     public function testCanSort() : void
@@ -118,22 +118,22 @@ class ObjectTest extends UnderscoreTestCase
         $collection = [$object, $object_alt];
 
         $under = BaseObject::sort($collection, 'name');
-        $this->assertEquals([$object_alt, $object], $under);
+        $this->assertSame([$object_alt, $object], $under);
 
         $under = BaseObject::sort($collection, 'child.sort', 'desc');
-        $this->assertEquals([$object_alt, $object], $under);
+        $this->assertSame([$object_alt, $object], $under);
 
         $under = BaseObject::sort($collection, function($value) {
             return $value->child->sort;
         }, 'desc');
-        $this->assertEquals([$object_alt, $object], $under);
+        $this->assertSame([$object_alt, $object], $under);
     }
 
     public function testCanConvertToArray() : void
     {
         $object = BaseObject::toArray($this->object);
 
-        $this->assertEquals($this->array, $object);
+        $this->assertSame($this->array, $object);
     }
 
     public function testCanUnpackObjects() : void
@@ -144,9 +144,9 @@ class ObjectTest extends UnderscoreTestCase
 
         $this->assertObjectHasAttribute('name', $objectAuto);
         $this->assertObjectHasAttribute('age', $objectAuto);
-        $this->assertEquals('foo', $objectAuto->name);
-        $this->assertEquals(18, $objectAuto->age);
-        $this->assertEquals($objectManual, $objectAuto);
+        $this->assertSame('foo', $objectAuto->name);
+        $this->assertSame(18, $objectAuto->age);
+        $this->assertEqualsCanonicalizing($objectManual, $objectAuto);
     }
 
     public function testCanReplaceValues() : void
@@ -154,7 +154,7 @@ class ObjectTest extends UnderscoreTestCase
         $object  = BaseObject::replace($this->object, 'foo', 'notfoo', 'notbar');
         $matcher = (object)['notfoo' => 'notbar', 'bis' => 'ter'];
 
-        $this->assertEquals($matcher, $object);
+        $this->assertEqualsCanonicalizing($matcher, $object);
     }
 
     public function testCanSetAnGetValues() : void
@@ -163,8 +163,8 @@ class ObjectTest extends UnderscoreTestCase
         $getset = BaseObject::setAndGet($object, 'set', 'get');
         $get    = BaseObject::get($object, 'set');
 
-        $this->assertEquals($getset, 'get');
-        $this->assertEquals($get, $getset);
+        $this->assertSame($getset, 'get');
+        $this->assertSame($get, $getset);
     }
 
     public function testFilterBy() : void
@@ -178,18 +178,18 @@ class ObjectTest extends UnderscoreTestCase
 
         $b = BaseObject::filterBy($a, 'name', 'baz');
         $this->assertCount(1, $b);
-        $this->assertEquals(2365, $b[0]->value);
+        $this->assertSame(2365, $b[0]->value);
 
         $c = BaseObject::filterBy($a, 'value', 2468);
         $this->assertCount(1, $c);
-        $this->assertEquals('primary', $c[0]->group);
+        $this->assertSame('primary', $c[0]->group);
 
         $d = BaseObject::filterBy($a, 'group', 'primary');
         $this->assertCount(3, $d);
 
         $e = BaseObject::filterBy($a, 'value', 2000, 'lt');
         $this->assertCount(1, $e);
-        $this->assertEquals(1468, $e[0]->value);
+        $this->assertSame(1468, $e[0]->value);
     }
 
     public function testFindBy() : void
@@ -203,21 +203,21 @@ class ObjectTest extends UnderscoreTestCase
 
         $b = BaseObject::findBy($a, 'name', 'baz');
         $this->assertInstanceOf(\stdClass::class, $b);
-        $this->assertEquals(2365, $b->value);
+        $this->assertSame(2365, $b->value);
         $this->assertObjectHasAttribute('name', $b);
         $this->assertObjectHasAttribute('group', $b);
         $this->assertObjectHasAttribute('value', $b);
 
         $c = BaseObject::findBy($a, 'value', 2468);
         $this->assertInstanceOf(\stdClass::class, $c);
-        $this->assertEquals('primary', $c->group);
+        $this->assertSame('primary', $c->group);
 
         $d = BaseObject::findBy($a, 'group', 'primary');
         $this->assertInstanceOf(\stdClass::class, $d);
-        $this->assertEquals('foo', $d->name);
+        $this->assertSame('foo', $d->name);
 
         $e = BaseObject::findBy($a, 'value', 2000, 'lt');
         $this->assertInstanceOf(\stdClass::class, $e);
-        $this->assertEquals(1468, $e->value);
+        $this->assertSame(1468, $e->value);
     }
 }

@@ -130,7 +130,7 @@ Arrays::diff($array, $array2, $array3) // Calls `array_diff`
 Arrays::from($array)->diff($array2, $array3)->merge($array4) // Calls `array_diff` then `array_merge` on the result
 ```
 ## Requirements
-PHP 7.1+
+PHP 7.3+
 
 ## Documentation
 

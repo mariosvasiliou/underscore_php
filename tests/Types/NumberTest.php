@@ -24,46 +24,46 @@ class NumberTest extends UnderscoreTestCase
 
     public function testCanCreateNewNumber() : void
     {
-        $this->assertEquals(0, Number::create()->obtain());
+        $this->assertSame(0, Number::create()->obtain());
     }
 
     public function testCanAccessStrPadding() : void
     {
         $number = Number::padding(5, 3, \STR_PAD_LEFT);
 
-        $this->assertEquals('005', $number);
+        $this->assertSame('005', $number);
     }
 
     public function testCanPadANumber() : void
     {
         $number = Number::padding(5, 3);
 
-        $this->assertEquals('050', $number);
+        $this->assertSame('050', $number);
     }
 
     public function testCanPadANumberOnTheLeft() : void
     {
         $number = Number::paddingLeft(5, 3);
 
-        $this->assertEquals('005', $number);
+        $this->assertSame('005', $number);
     }
 
     public function testCanPadANumberOnTheRight() : void
     {
         $number = Number::paddingRight(5, 3);
 
-        $this->assertEquals('500', $number);
+        $this->assertSame('500', $number);
     }
 
     public function testCanUsePhpRoundingMethods() : void
     {
         $number = Number::round(5.33);
-        $this->assertEquals(5, $number);
+        $this->assertSame(5.0, $number);
 
         $number = Number::ceil(5.33);
-        $this->assertEquals(6, $number);
+        $this->assertSame(6.0, $number);
 
         $number = Number::floor(5.33);
-        $this->assertEquals(5, $number);
+        $this->assertSame(5.0, $number);
     }
 }

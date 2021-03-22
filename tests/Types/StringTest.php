@@ -69,15 +69,15 @@ class StringTest extends UnderscoreTestCase
     {
         $string = Strings::create();
 
-        $this->assertEquals('', $string->obtain());
+        $this->assertSame('', $string->obtain());
     }
 
     public function testDoesntPluralizeTwice() : void
     {
         $string = new Strings('person');
 
-        $this->assertEquals('people', $string->plural());
-        $this->assertEquals('people', $string->plural());
+        $this->assertSame('people', (string)$string->plural());
+        $this->assertSame('people', (string)$string->plural());
     }
 
     public function testHasAccessToStrMethods() : void
@@ -85,47 +85,47 @@ class StringTest extends UnderscoreTestCase
         $string1 = Strings::limit('foo', 1);
         $string2 = Underscore::from('foo')->limit(1)->obtain();
 
-        $this->assertEquals('f...', $string1);
-        $this->assertEquals('f...', $string2);
+        $this->assertSame('f...', $string1);
+        $this->assertSame('f...', $string2);
     }
 
     public function testCanRemoveTextFromString() : void
     {
         $return = Strings::remove($this->remove, 'bar');
 
-        $this->assertEquals('foo foo  foo kal ter son', $return);
+        $this->assertSame('foo foo  foo kal ter son', $return);
     }
 
     public function testCanRemoveMultipleTextsFromString() : void
     {
         $return = Strings::remove($this->remove, ['foo', 'son']);
 
-        $this->assertEquals('bar  kal ter', $return);
+        $this->assertSame('bar  kal ter', $return);
     }
 
     public function testCanToggleBetweenTwoStrings() : void
     {
         $toggle = Strings::toggle('foo', 'foo', 'bar');
-        $this->assertEquals('bar', $toggle);
+        $this->assertSame('bar', $toggle);
     }
 
     public function testCannotLooselyToggleBetweenStrings() : void
     {
         $toggle = Strings::toggle('dei', 'foo', 'bar');
-        $this->assertEquals('dei', $toggle);
+        $this->assertSame('dei', $toggle);
     }
 
     public function testCanLooselyToggleBetweenStrings() : void
     {
         $toggle = Strings::toggle('dei', 'foo', 'bar', true);
-        $this->assertEquals('foo', $toggle);
+        $this->assertSame('foo', $toggle);
     }
 
     public function testCanRepeatString() : void
     {
         $string = Strings::from('foo')->repeat(3)->obtain();
 
-        $this->assertEquals('foofoofoo', $string);
+        $this->assertSame('foofoofoo', $string);
     }
 
     /**
@@ -147,7 +147,7 @@ class StringTest extends UnderscoreTestCase
     {
         $result = Strings::find($haystack, $needle, $caseSensitive, $absoluteFinding);
 
-        $this->assertEquals($expect, $result);
+        $this->assertSame($expect, $result);
     }
 
     public function testCanAssertAStringStartsWith() : void
@@ -164,13 +164,13 @@ class StringTest extends UnderscoreTestCase
 
     public function testStringsCanBeSlugged() : void
     {
-        $this->assertEquals('my-new-post', Strings::slugify('My_nEw\\\/  @ post!!!'));
-        $this->assertEquals('my_new_post', Strings::slugify('My nEw post!!!', '_'));
+        $this->assertSame('my-new-post', Strings::slugify('My_nEw\\\/  @ post!!!'));
+        $this->assertSame('my_new_post', Strings::slugify('My nEw post!!!', '_'));
     }
 
     public function testRandomStringsCanBeGenerated() : void
     {
-        $this->assertEquals(40, \strlen(Strings::random(40)));
+        $this->assertSame(40, \strlen(Strings::random(40)));
     }
 
     /**
@@ -183,44 +183,44 @@ class StringTest extends UnderscoreTestCase
     {
         $result = Strings::accord($number, '%d things', 'one thing', 'nothing');
 
-        $this->assertEquals($expect, $result);
+        $this->assertSame($expect, $result);
     }
 
     public function testCanSliceFromAString() : void
     {
         $string = Strings::sliceFrom('abcdef', 'c');
 
-        $this->assertEquals('cdef', $string);
+        $this->assertSame('cdef', $string);
     }
 
     public function testCanSliceToAString() : void
     {
         $string = Strings::sliceTo('abcdef', 'c');
 
-        $this->assertEquals('ab', $string);
+        $this->assertSame('ab', $string);
     }
 
     public function testCanSliceAString() : void
     {
         $string = Strings::slice('abcdef', 'c');
 
-        $this->assertEquals(['ab', 'cdef'], $string);
+        $this->assertSame(['ab', 'cdef'], $string);
     }
 
     public function testCanUseCorrectOrderForStrReplace() : void
     {
         $string = Strings::replace('foo', 'foo', 'bar');
 
-        $this->assertEquals('bar', $string);
+        $this->assertSame('bar', $string);
     }
 
     public function testCanExplodeString() : void
     {
         $string = Strings::explode('foo bar foo', ' ');
-        $this->assertEquals(['foo', 'bar', 'foo'], $string);
+        $this->assertSame(['foo', 'bar', 'foo'], $string);
 
         $string = Strings::explode('foo bar foo', ' ', -1);
-        $this->assertEquals(['foo', 'bar'], $string);
+        $this->assertSame(['foo', 'bar'], $string);
     }
 
     public function testCanGenerateRandomWords() : void
@@ -228,60 +228,60 @@ class StringTest extends UnderscoreTestCase
         $string = Strings::randomStrings($words = 5, $size = 5);
 
         $result = ($words * $size) + ($words * 1) - 1;
-        $this->assertEquals($result, \strlen($string));
+        $this->assertSame($result, \strlen($string));
     }
 
     public function testCanConvertToSnakeCase() : void
     {
         $string = Strings::toSnakeCase('thisIsAString');
 
-        $this->assertEquals('this_is_a_string', $string);
+        $this->assertSame('this_is_a_string', $string);
     }
 
     public function testCanConvertToCamelCase() : void
     {
         $string = Strings::toCamelCase('this_is_a_string');
 
-        $this->assertEquals('thisIsAString', $string);
+        $this->assertSame('thisIsAString', $string);
     }
 
     public function testCanConvertToPascalCase() : void
     {
         $string = Strings::toPascalCase('this_is_a_string');
 
-        $this->assertEquals('ThisIsAString', $string);
+        $this->assertSame('ThisIsAString', $string);
     }
 
     public function testCanConvertToLowercase() : void
     {
-        $this->assertEquals('taylor', Strings::lower('TAYLOR'));
-        $this->assertEquals('άχιστη', Strings::lower('ΆΧΙΣΤΗ'));
+        $this->assertSame('taylor', Strings::lower('TAYLOR'));
+        $this->assertSame('άχιστη', Strings::lower('ΆΧΙΣΤΗ'));
     }
 
     public function testCanConvertToUppercase() : void
     {
-        $this->assertEquals('TAYLOR', Strings::upper('taylor'));
-        $this->assertEquals('ΆΧΙΣΤΗ', Strings::upper('άχιστη'));
+        $this->assertSame('TAYLOR', Strings::upper('taylor'));
+        $this->assertSame('ΆΧΙΣΤΗ', Strings::upper('άχιστη'));
     }
 
     public function testCanConvertToTitleCase() : void
     {
-        $this->assertEquals('Taylor', Strings::title('taylor'));
-        $this->assertEquals('Άχιστη', Strings::title('άχιστη'));
+        $this->assertSame('Taylor', Strings::title('taylor'));
+        $this->assertSame('Άχιστη', Strings::title('άχιστη'));
     }
 
     public function testCanLimitStringsByCharacters() : void
     {
-        $this->assertEquals('Tay...', Strings::limit('Taylor', 3));
-        $this->assertEquals('Taylor', Strings::limit('Taylor', 6));
-        $this->assertEquals('Tay___', Strings::limit('Taylor', 3, '___'));
+        $this->assertSame('Tay...', Strings::limit('Taylor', 3));
+        $this->assertSame('Taylor', Strings::limit('Taylor', 6));
+        $this->assertSame('Tay___', Strings::limit('Taylor', 3, '___'));
     }
 
     public function testCanLimitByWords() : void
     {
-        $this->assertEquals('Taylor...', Strings::words('Taylor Otwell', 1));
-        $this->assertEquals('Taylor___', Strings::words('Taylor Otwell', 1, '___'));
-        $this->assertEquals('Taylor Otwell', Strings::words('Taylor Otwell', 3));
+        $this->assertSame('Taylor...', Strings::words('Taylor Otwell', 1));
+        $this->assertSame('Taylor___', Strings::words('Taylor Otwell', 1, '___'));
+        $this->assertSame('Taylor Otwell', Strings::words('Taylor Otwell', 3));
     }
 
     public function testCanCheckIfIsIp() : void
@@ -304,16 +304,16 @@ class StringTest extends UnderscoreTestCase
 
     public function testCanPrependString() : void
     {
-        $this->assertEquals('foobar', Strings::prepend('bar', 'foo'));
+        $this->assertSame('foobar', Strings::prepend('bar', 'foo'));
     }
 
     public function testCanAppendString() : void
     {
-        $this->assertEquals('foobar', Strings::append('foo', 'bar'));
+        $this->assertSame('foobar', Strings::append('foo', 'bar'));
     }
 
     public function testCanGetBaseClass() : void
     {
-        $this->assertEquals('Baz', Strings::baseClass(Baz::class));
+        $this->assertSame('Baz', Strings::baseClass(Baz::class));
     }
 }

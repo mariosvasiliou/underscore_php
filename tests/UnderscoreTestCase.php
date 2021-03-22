@@ -38,13 +38,13 @@ abstract class UnderscoreTestCase extends TestCase
     /**
      * Restore data just in case.
      */
-    public function setUp()
+    protected function setUp() : void
     {
         $this->object      = (object)$this->array;
         $this->objectMulti = (object)[
             (object)$this->arrayMulti[0],
             (object)$this->arrayMulti[1],
-            (object) $this->arrayMulti[2],
+            (object)$this->arrayMulti[2],
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -11,16 +12,70 @@
 
 namespace Underscore\Methods;
 
-use Doctrine\Common\Inflector\Inflector;
-use Patchwork\Utf8;
+use Doctrine\Inflector\CachedWordInflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\Rules;
+use Doctrine\Inflector\RulesetInflector;
 use RuntimeException;
 use Underscore\Types\Strings;
+use function Symfony\Component\String\u;
 
 /**
  * Methods to manage strings.
  */
 class StringsMethods
 {
+
+    /**
+     * Uncountable word forms.
+     *
+     * @var array
+     */
+    public static $uncountable = [
+        'audio',
+        'bison',
+        'cattle',
+        'chassis',
+        'compensation',
+        'coreopsis',
+        'data',
+        'deer',
+        'education',
+        'emoji',
+        'equipment',
+        'evidence',
+        'feedback',
+        'firmware',
+        'fish',
+        'furniture',
+        'gold',
+        'hardware',
+        'information',
+        'jedi',
+        'kin',
+        'knowledge',
+        'love',
+        'metadata',
+        'money',
+        'moose',
+        'news',
+        'nutrition',
+        'offspring',
+        'plankton',
+        'pokemon',
+        'police',
+        'rain',
+        'recommended',
+        'related',
+        'rice',
+        'series',
+        'sheep',
+        'software',
+        'species',
+        'swine',
+        'traffic',
+        'wheat',
+    ];
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////// CREATE  /////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -416,8 +471,7 @@ class StringsMethods
      */
     protected static function slug($title, $separator = '-') : string
     {
-        $title = Utf8::toAscii($title);
-
+        $title = u($title)->ascii()->toString();
         // Convert all dashes/underscores into separator
         $flip = $separator === '-' ? '_' : '-';
 
@@ -481,24 +535,32 @@ class StringsMethods
      * Get the plural form of an English word.
      *
      * @param string $value
+     * @param int    $count
      *
      * @return string
      */
-    public static function plural($value) : string
+    public static function plural($value)
     {
-        return Inflector::pluralize($value);
+        if (static::uncountable($value)) {
+            return $value;
+        }
+
+        $plural = static::inflector()->pluralize($value);
+
+        return static::matchCase($plural, $value);
     }
 
     /**
      * Get the singular form of an English word.
      *
      * @param string $value
-     *
      * @return string
      */
-    public static function singular($value) : string
+    public static function singular($value)
     {
-        return Inflector::singularize($value);
+        $singular = static::inflector()->singularize($value);
+
+        return static::matchCase($singular, $value);
     }
 
     /**
@@ -560,7 +622,7 @@ class StringsMethods
      */
     public static function toPascalCase($string) : string
     {
-        return Inflector::classify($string);
+        return u($string)->camel()->title()->toString();
     }
 
     /**
@@ -572,9 +634,7 @@ class StringsMethods
      */
     public static function toSnakeCase($string) : string
     {
-        return preg_replace_callback('/([A-Z])/', function($match) {
-            return '_'.strtolower($match[1]);
-        }, $string);
+        return u($string)->snake()->toString();
     }
 
     /**
@@ -586,6 +646,63 @@ class StringsMethods
      */
     public static function toCamelCase($string) : string
     {
-        return Inflector::camelize($string);
+        return u($string)->camel()->toString();
     }
+
+    /**
+     * Get the inflector instance.
+     *
+     * @return \Doctrine\Inflector\Inflector
+     */
+    public static function inflector()
+    {
+        static $inflector;
+
+        if (is_null($inflector)) {
+            $inflector = new Inflector(
+                new CachedWordInflector(new RulesetInflector(
+                    Rules::getSingularRuleset()
+                )),
+                new CachedWordInflector(new RulesetInflector(
+                    Rules::getPluralRuleset()
+                ))
+            );
+        }
+
+        return $inflector;
+    }
+
+    /**
+     * Determine if the given value is uncountable.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected static function uncountable($value) : bool
+    {
+        return \in_array(strtolower($value), static::$uncountable, true);
+    }
+
+    /**
+     * Attempt to match the case on two strings.
+     *
+     * @param string $value
+     * @param string $comparison
+     *
+     * @return string
+     */
+    protected static function matchCase($value, $comparison) : string
+    {
+        $functions = ['mb_strtolower', 'mb_strtoupper', 'ucfirst', 'ucwords'];
+
+        foreach ($functions as $function) {
+            if ($function($comparison) === $comparison) {
+                return $function($value);
+            }
+        }
+
+        return $value;
+    }
+
 }
