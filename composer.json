@@ -27,7 +27,7 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "friendsofphp/php-cs-fixer": "^2.1",
+    "friendsofphp/php-cs-fixer": "^v3.27.0",
     "phpunit/phpunit": "^9.5.10"
   },
   "autoload": {
@@ -41,8 +41,11 @@
     }
   },
   "scripts": {
-    "test": ["php-cs-fixer fix --dry-run", "phpunit --verbose"],
-    "lint": "php-cs-fixer fix"
+    "test": [
+      "php-cs-fixer fix --dry-run --config .php-cs-fixer.php",
+      "phpunit --verbose"
+    ],
+    "lint": "php-cs-fixer fix --config .php-cs-fixer.php"
   },
   "config": {
     "sort-packages": true

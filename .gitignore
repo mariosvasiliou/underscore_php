@@ -28,6 +28,7 @@ atlassian-ide-plugin.xml
 
 # Tests
 .php_cs.cache
+/.php-cs-fixer.cache
 tests/.coverage
 /storage/tests/
 /.phpunit.result.cache

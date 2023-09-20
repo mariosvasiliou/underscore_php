@@ -6,6 +6,8 @@
 - Drop support for older PHP versions
 - Refactoring and strict types
 - Migrate phpunit to new schema for new version
+- Fixed ci tools
+- Changed code style to Laravel
 
 ## 2.2.0 2019-20-12
 - Refactor methods
