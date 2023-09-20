@@ -21,7 +21,7 @@ It works both as a stand-alone via *Composer* or as a bundle for the Laravel fra
 
 ## Install Underscore
 
-To install Underscore.php simply run `composer require anahkiasen/underscore-php`.
+To install Underscore.php simply run `composer require mariosvasiliou/underscore_php`.
 Note that Underscore's type classes (Arrays/Strings/etc) are by default namespaced in the `Types` folder, so to use Arrays, you would do the following :
 
 ```php
@@ -131,7 +131,7 @@ Arrays::from($array)->diff($array2, $array3)->merge($array4) // Calls `array_dif
 ```
 ## Requirements
 
-PHP 7.3,7.4,8.0 use version 2.x
+PHP 7.3,7.4,8.0 use version 2.x\
 PHP 8.1+ use version 3.x
 
 ## Documentation
