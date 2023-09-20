@@ -1,15 +1,11 @@
 filter:
   paths:
     - src/*
-  excluded_paths: [ tests/* ]
+  excluded_paths:
+    - tests/*
 
 checks:
   php: true
-
-tools:
-  external_code_coverage:
-    timeout: 600
-    runs: 3
 
 build:
   environment:
@@ -19,13 +15,14 @@ build:
         xdebug.mode: coverage
   cache:
     directories:
-      - node_modules
       - vendor/
       - ~/.composer/cache/
+      - ~/.composer
   dependencies:
+    override:
+      - composer install --no-interaction
     before:
       - composer self-update --2
-      - composer install --no-interaction
   tests:
     before:
       - mkdir storage
@@ -33,7 +30,7 @@ build:
     override:
       - command: phpcs-run
         use_website_config: false
-      - command: vendor/bin/phpunit --coverage-clover=coverage-clover
+      - command: 'vendor/bin/phpunit --coverage-clover tests/logs/clover.xml'
         coverage:
-          file: coverage-clover
-          format: clover
+          file: 'tests/logs/clover.xml'
+          format: 'php-clover'
