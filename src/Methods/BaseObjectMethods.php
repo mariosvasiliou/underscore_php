@@ -21,11 +21,11 @@ class BaseObjectMethods extends CollectionMethods
     /**
      * Get all methods from an object.
      *
-     * @param $object
+     * @param  object  $object
      *
      * @return array
      */
-    public static function methods($object) : array
+    public static function methods(object $object) : array
     {
         return get_class_methods($object::class);
     }
@@ -33,12 +33,12 @@ class BaseObjectMethods extends CollectionMethods
     /**
      * Unpack an object's properties.
      *
-     * @param      $object
-     * @param null $attribute
+     * @param  object  $object
+     * @param  mixed  $attribute
      *
      * @return object
      */
-    public static function unpack($object, $attribute = null) : object
+    public static function unpack(object $object, mixed $attribute = null) : object
     {
         $object = (array) $object;
         $object = $attribute

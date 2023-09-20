@@ -267,6 +267,6 @@ class Parse
             return $array;
         }
 
-        return $array;
+        return [$string];
     }
 }

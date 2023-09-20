@@ -33,7 +33,7 @@ build:
     override:
       - command: phpcs-run
         use_website_config: false
-      - command: php vendor/bin/phpunit --coverage-clover=coverage-clover
+      - command: vendor/bin/phpunit --coverage-clover=coverage-clover
         coverage:
           file: coverage-clover
           format: clover

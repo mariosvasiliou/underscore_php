@@ -63,12 +63,12 @@ class FunctionsMethods
      * Create a function that can only be called $times times.
      *
      * @param  callable  $function
-     * @param          $canBeCalledTimes  $times    The number of times
+     * @param  int  $canBeCalledTimes  $times    The number of times
      *
      * @return Closure
      * @throws Exception
      */
-    public static function only(callable $function, $canBeCalledTimes) : callable
+    public static function only(callable $function, int $canBeCalledTimes) : callable
     {
         $unique = random_int(0, mt_getrandmax());
 

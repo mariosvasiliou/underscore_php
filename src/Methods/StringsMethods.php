@@ -543,7 +543,7 @@ class StringsMethods
      *
      * @return string
      */
-    public static function plural(string $value = null) : string
+    public static function plural(string $value = null) : ?string
     {
         if (static::uncountable($value)) {
             return $value;

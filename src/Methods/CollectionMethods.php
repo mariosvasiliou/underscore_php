@@ -225,7 +225,7 @@ abstract class CollectionMethods
     {
         $filtered = static::filterBy($collection, $property, $value, $comparisonOp);
 
-        return ArraysMethods::first($filtered);
+        return ArraysMethods::first(\is_array($filtered) ? $filtered : (array) $filtered);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -281,12 +281,13 @@ abstract class CollectionMethods
      * If the sorter is null, the collection is sorted naturally.
      *
      * @param  array|object  $collection
-     * @param  null  $sorter
+     * @param  string|callable|null  $sorter
      * @param  string  $direction
      *
      * @return array
      */
-    public static function sort(array|object $collection, $sorter = null, string $direction = 'asc') : array
+    public static function sort(array|object $collection, string|callable $sorter = null, string $direction = 'asc') :
+    array
     {
         $collection = (array) $collection;
 

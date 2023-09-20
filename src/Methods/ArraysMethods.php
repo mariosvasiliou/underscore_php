@@ -47,14 +47,14 @@ class ArraysMethods extends CollectionMethods
     /**
      * Fill an array with $times times some $data.
      */
-    public static function repeat(mixed $data, int|float $times) : array
+    public static function repeat(mixed $data, int $times) : array
     {
-        $times = abs($times);
-        if ($times === 0) {
+        $timesAbs = abs($times);
+        if ($timesAbs === 0) {
             return [];
         }
 
-        return array_fill(0, $times, $data);
+        return array_fill(0, $timesAbs, $data);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ class ArraysMethods extends CollectionMethods
      */
     public static function random(array $array, int $take = null) : mixed
     {
-        if ( ! $take) {
+        if ($take === null) {
             return $array[array_rand($array)];
         }
 
@@ -268,7 +268,7 @@ class ArraysMethods extends CollectionMethods
      */
     public static function first(array $array, int $take = null) : mixed
     {
-        if ( ! $take) {
+        if ($take === null) {
             return array_shift($array);
         }
 
@@ -283,7 +283,7 @@ class ArraysMethods extends CollectionMethods
      */
     public static function last(array $array, int $take = null) : mixed
     {
-        if ( ! $take) {
+        if ($take === null) {
             return array_pop($array);
         }
 
