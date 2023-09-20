@@ -22,7 +22,7 @@ tools:
     runs: 3
 build:
   environment:
-    php: '7.3'
+    php: '8.1'
   cache:
     directories:
       - node_modules
@@ -30,7 +30,7 @@ build:
       - ~/.composer/cache/
   dependencies:
     before:
-      - composer self-update
+      - composer self-update --2
       - composer install --no-interaction
   tests:
     before:
