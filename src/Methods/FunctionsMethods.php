@@ -186,7 +186,6 @@ class FunctionsMethods
     /**
      * Prefill function arguments.
      *
-     *
      * @return Closure
      * @author Jeremy Ashkenas
      */
@@ -194,7 +193,7 @@ class FunctionsMethods
     {
         $boundArgs = \array_slice(\func_get_args(), 1);
 
-        return function() use ($boundArgs, $func) {
+        return function () use ($boundArgs, $func) {
             $args       = [];
             $calledArgs = \func_get_args();
             $position   = 0;

@@ -124,7 +124,7 @@ class Parse
 
         // Convert objects to arrays
         if (\is_object($data)) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
 
         // Don't convert if it's not an array
@@ -175,7 +175,7 @@ class Parse
             $data = $data->toArray();
         }
 
-        return (array)$data;
+        return (array) $data;
     }
 
     /**
@@ -193,7 +193,7 @@ class Parse
             return static::toJSON($data);
         }
 
-        return (string)$data;
+        return (string) $data;
     }
 
     /**
@@ -215,7 +215,7 @@ class Parse
             return \strlen($data);
         }
 
-        return (int)$data;
+        return (int) $data;
     }
 
     /**
@@ -227,7 +227,7 @@ class Parse
      */
     public static function toBoolean(mixed $data) : bool
     {
-        return (bool)$data;
+        return (bool) $data;
     }
 
     /**

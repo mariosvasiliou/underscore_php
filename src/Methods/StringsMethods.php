@@ -95,11 +95,9 @@ class StringsMethods
     {
         if ($count === 1) {
             $output = $one;
-        }
-        elseif ($count === 0 && ! empty($zero)) {
+        } elseif ($count === 0 && ! empty($zero)) {
             $output = $zero;
-        }
-        else {
+        } else {
             $output = $many;
         }
 
@@ -185,8 +183,8 @@ class StringsMethods
      */
     public static function endsWith(string $haystack, array|string $needles) : bool
     {
-        foreach ((array)$needles as $needle) {
-            if ((string)$needle === substr($haystack, -\strlen($needle))) {
+        foreach ((array) $needles as $needle) {
+            if ((string) $needle === substr($haystack, -\strlen($needle))) {
                 return true;
             }
         }
@@ -242,7 +240,7 @@ class StringsMethods
      */
     public static function startsWith(string $haystack, array|string $needles) : bool
     {
-        foreach ((array)$needles as $needle) {
+        foreach ((array) $needles as $needle) {
             if ($needle !== '' && str_starts_with($haystack, $needle)) {
                 return true;
             }
@@ -711,5 +709,4 @@ class StringsMethods
 
         return $value;
     }
-
 }

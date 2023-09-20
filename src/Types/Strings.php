@@ -17,7 +17,6 @@ use Underscore\Traits\Repository;
 
 /**
  * Strings repository.
- 
  *
  *@mixin StringsMethods
  */

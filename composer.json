@@ -28,6 +28,7 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "friendsofphp/php-cs-fixer": "^v3.27.0",
+    "squizlabs/php_codesniffer": "3.7.2",
     "phpunit/phpunit": "^9.5.10"
   },
   "autoload": {

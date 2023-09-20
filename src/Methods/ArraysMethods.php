@@ -36,8 +36,7 @@ class ArraysMethods extends CollectionMethods
         // Dynamic arguments
         if ($stop !== null) {
             $start = $_base;
-        }
-        else {
+        } else {
             $start = 1;
             $stop  = $_base;
         }
@@ -47,8 +46,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Fill an array with $times times some $data.
-     *
-     *
      */
     public static function repeat(mixed $data, int|float $times) : array
     {
@@ -101,8 +98,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Check if any item in an array matches a truth test.
-     *
-     *
      */
     public static function matchesAny(array $array, callable $closure) : bool
     {
@@ -146,8 +141,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Get the size of an array.
-     *
-     *
      */
     public static function size(array $array) : int
     {
@@ -196,7 +189,6 @@ class ArraysMethods extends CollectionMethods
     /**
      * Find the first item in an array that passes the truth test.
      *
-     *
      * @return mixed|void
      */
     public static function find(array $array, Closure $closure)
@@ -210,7 +202,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Clean all falsy values from an array.
-     *
      *
      * @return array|mixed
      */
@@ -252,8 +243,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Return an array with all elements found in both input arrays.
-     *
-     *
      */
     public static function intersection(array $a, array $b) : array
     {
@@ -262,8 +251,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Return a boolean flag which indicates whether the two input arrays have any common elements.
-     *
-     *
      */
     public static function intersects(array $a, array $b) : bool
     {
@@ -336,8 +323,6 @@ class ArraysMethods extends CollectionMethods
     ////////////////////////////////////////////////////////////////////
     /**
      * Iterate over an array and execute a callback for each loop.
-     *
-     *
      */
     public static function at(array $array, Closure $closure) : array
     {
@@ -378,8 +363,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Iterate over an array and modify the array's value.
-     *
-     *
      */
     public static function each(array $array, Closure $closure) : array
     {
@@ -392,8 +375,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Shuffle an array.
-     *
-     *
      */
     public static function shuffle(array $array) : array
     {
@@ -404,16 +385,13 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Sort an array by key.
-     *
-     *
      */
     public static function sortKeys(array $array, string $direction = 'ASC') : array
     {
         $directionNumber = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
         if ($directionNumber === SORT_ASC) {
             ksort($array);
-        }
-        else {
+        } else {
             krsort($array);
         }
 
@@ -480,8 +458,7 @@ class ArraysMethods extends CollectionMethods
         foreach ($_flattened as $key => $value) {
             if (\is_array($value)) {
                 $flattened = [...$flattened, ...$value];
-            }
-            else {
+            } else {
                 $flattened[$key] = $value;
             }
         }
@@ -515,8 +492,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Return all items that fail the truth test.
-     *
-     *
      */
     public static function reject(array $array, Closure $closure) : array
     {
@@ -533,8 +508,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Remove the first value from an array.
-     *
-     *
      */
     public static function removeFirst(array $array) : array
     {
@@ -545,8 +518,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Remove the last value from an array.
-     *
-     *
      */
     public static function removeLast(array $array) : array
     {
@@ -557,8 +528,6 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Removes a particular value from an array (numeric or associative).
-     *
-     *
      */
     public static function removeValue(array $array, string $value) : array
     {
@@ -599,7 +568,6 @@ class ArraysMethods extends CollectionMethods
      * Append a value to an array.
      *
      * @param string $value
-     *
      */
     public static function append(array $array, mixed $value) : array
     {
@@ -610,6 +578,7 @@ class ArraysMethods extends CollectionMethods
 
     /**
      * Return a duplicate free copy of an array
+     *
      * @param  array  $array
      *
      * @return array

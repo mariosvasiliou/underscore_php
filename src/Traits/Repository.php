@@ -67,7 +67,6 @@ abstract class Repository
         if ($typecaster) {
             $this->$typecaster();
         }
-
     }
 
     /**
@@ -271,8 +270,7 @@ abstract class Repository
         if ( ! StringsMethods::find($callingClass, 'Underscore\Types')) {
             if (isset($arguments[0])) {
                 $callingClass = Dispatch::toClass($arguments[0]);
-            }
-            else {
+            } else {
                 $callingClass = Method::findInClasses($callingClass, $method);
             }
         }
@@ -300,7 +298,6 @@ abstract class Repository
             5 => $class::$method($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]),
             default => throw new RuntimeException('No appropriate method found'),
         };
-
     }
 
     /**

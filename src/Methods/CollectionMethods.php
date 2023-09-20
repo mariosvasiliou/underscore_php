@@ -240,7 +240,7 @@ abstract class CollectionMethods
      */
     public static function keys($collection) : array
     {
-        return array_keys((array)$collection);
+        return array_keys((array) $collection);
     }
 
     /**
@@ -252,7 +252,7 @@ abstract class CollectionMethods
      */
     public static function values($collection) : array
     {
-        return array_values((array)$collection);
+        return array_values((array) $collection);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -288,15 +288,17 @@ abstract class CollectionMethods
      */
     public static function sort(array|object $collection, $sorter = null, string $direction = 'asc') : array
     {
-        $collection = (array)$collection;
+        $collection = (array) $collection;
 
         // Get correct PHP constant for direction
         $directionNumber = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
 
         // Transform all values into their results
         if ($sorter) {
-            $results = ArraysMethods::each($collection,
-                fn($value) => \is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter));
+            $results = ArraysMethods::each(
+                $collection,
+                fn($value) => \is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter)
+            );
         } else {
             $results = $collection;
         }
@@ -318,7 +320,7 @@ abstract class CollectionMethods
      */
     public static function group(mixed $collection, callable|string $grouper, bool $saveKeys = false) : array
     {
-        $collection = (array)$collection;
+        $collection = (array) $collection;
         $result     = [];
 
         // Iterate over values, group by property/results from closure
@@ -370,8 +372,7 @@ abstract class CollectionMethods
                 $collection->{$key} = static::get($collection, $key, []);
                 $collection         = &$collection->{$key};
                 // If we're dealing with an array
-            }
-            else {
+            } else {
                 $collection[$key] = static::get($collection, $key, []);
                 $collection       = &$collection[$key];
             }
@@ -381,8 +382,7 @@ abstract class CollectionMethods
         $key = array_shift($keys);
         if (\is_array($collection)) {
             $collection[$key] = $value;
-        }
-        else {
+        } else {
             $collection->{$key} = $value;
         }
 
@@ -414,8 +414,7 @@ abstract class CollectionMethods
             if (\is_object($collection)) {
                 $collection = &$collection->{$key};
                 // If we're dealing with an array
-            }
-            else {
+            } else {
                 $collection = &$collection[$key];
             }
         }
@@ -423,8 +422,7 @@ abstract class CollectionMethods
         $key = array_shift($keys);
         if (\is_object($collection)) {
             unset($collection->{$key});
-        }
-        else {
+        } else {
             unset($collection[$key]);
         }
 
@@ -436,8 +434,6 @@ abstract class CollectionMethods
      * a key for each element in the list (or a property name),
      * returns an object with an index of each item.
      * Just like groupBy, but for when you know your keys are unique.
-     *
-     *
      */
     public static function indexBy(array $array, mixed $key) : array
     {
