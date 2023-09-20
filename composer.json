@@ -1,7 +1,7 @@
 {
   "name": "mariosvasiliou/underscore_php",
   "description": "A redacted port of Underscore.js for PHP",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "license": "MIT",
   "keywords": [
     "toolkit",
@@ -20,7 +20,7 @@
     }
   ],
   "require": {
-    "php": ">=7.3.0",
+    "php": ">=8.1.0",
     "doctrine/inflector": "^2.0",
     "symfony/polyfill-mbstring": "^v1.22.0",
     "symfony/string": "^v5.2.4"
@@ -28,7 +28,7 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "friendsofphp/php-cs-fixer": "^2.1",
-    "phpunit/phpunit": "^8.5"
+    "phpunit/phpunit": "^9.5.10"
   },
   "autoload": {
     "psr-4": {
@@ -43,5 +43,10 @@
   "scripts": {
     "test": ["php-cs-fixer fix --dry-run", "phpunit --verbose"],
     "lint": "php-cs-fixer fix"
-  }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }

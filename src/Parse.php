@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -11,6 +12,7 @@
 
 namespace Underscore;
 
+use JsonException;
 use Underscore\Methods\ArraysMethods;
 
 /**
@@ -25,25 +27,27 @@ class Parse
     /**
      * Converts data from JSON.
      *
-     * @param string $data The data to parse
+     * @param  string  $data  The data to parse
      *
      * @return mixed
+     * @throws JsonException
      */
-    public static function fromJSON($data)
+    public static function fromJSON(string $data) : mixed
     {
-        return json_decode($data, true);
+        return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
      * Converts data to JSON.
      *
-     * @param array|object $data The data to convert
+     * @param  mixed  $data  The data to convert
      *
      * @return string Converted data
+     * @throws JsonException
      */
-    public static function toJSON($data) : string
+    public static function toJSON(mixed $data) : string
     {
-        return json_encode($data);
+        return json_encode($data, JSON_THROW_ON_ERROR);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -53,17 +57,17 @@ class Parse
     /**
      * Converts data from XML.
      *
-     * @param string $xml The data to parse
+     * @param  string  $xml  The data to parse
      *
      * @return array
+     * @throws JsonException
      */
-    public static function fromXML($xml) : array
+    public static function fromXML(string $xml) : array
     {
-        $xml = simplexml_load_string($xml);
-        $xml = json_encode($xml);
-        $xml = json_decode($xml, true);
+        $xmlEl  = simplexml_load_string($xml);
+        $xmlEnc = json_encode($xmlEl, JSON_THROW_ON_ERROR);
 
-        return $xml;
+        return json_decode($xmlEnc, true, 512, JSON_THROW_ON_ERROR);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -73,30 +77,30 @@ class Parse
     /**
      * Converts data from CSV.
      *
-     * @param string $data       The data to parse
-     * @param bool   $hasHeaders Whether the CSV has headers
+     * @param  string  $data  The data to parse
+     * @param  bool  $hasHeaders  Whether the CSV has headers
      *
      * @return mixed
      */
-    public static function fromCSV($data, $hasHeaders = false)
+    public static function fromCSV(string $data, bool $hasHeaders = false) : array
     {
         $data = trim($data);
 
         // Explodes rows
-        $data = static::explodeWith($data, [PHP_EOL, "\r", "\n"]);
-        $data = array_map(function ($row) {
+        $dataArray = static::explodeWith($data, [PHP_EOL, "\r", "\n"]);
+        $dataArray = array_map(function ($row) {
             return Parse::explodeWith($row, [';', "\t", ',']);
-        }, $data);
+        }, $dataArray);
 
         // Get headers
-        $headers = $hasHeaders ? $data[0] : array_keys($data[0]);
+        $headers = $hasHeaders ? $dataArray[0] : array_keys($dataArray[0]);
         if ($hasHeaders) {
-            array_shift($data);
+            array_shift($dataArray);
         }
 
         // Parse the columns in each row
         $array = [];
-        foreach ($data as $row => $columns) {
+        foreach ($dataArray as $row => $columns) {
             foreach ($columns as $columnNumber => $column) {
                 $array[$row][$headers[$columnNumber]] = $column;
             }
@@ -109,12 +113,12 @@ class Parse
      * Converts data to CSV.
      *
      * @param mixed  $data          The data to convert
-     * @param string $delimiter
-     * @param bool   $exportHeaders
+     * @param  string  $delimiter
+     * @param  bool  $exportHeaders
      *
      * @return string Converted data
      */
-    public static function toCSV($data, $delimiter = ';', $exportHeaders = false) : string
+    public static function toCSV(mixed $data, string $delimiter = ';', bool $exportHeaders = false) : string
     {
         $csv = [];
 
@@ -160,11 +164,11 @@ class Parse
     /**
      * Converts data to an array.
      *
-     * @param string|object $data
+     * @param  mixed  $data
      *
      * @return array
      */
-    public static function toArray($data) : array
+    public static function toArray(mixed $data) : array
     {
         // Look for common array conversion patterns in objects
         if (\is_object($data) && method_exists($data, 'toArray')) {
@@ -177,11 +181,12 @@ class Parse
     /**
      * Converts data to a string.
      *
-     * @param array|object $data
+     * @param  mixed  $data
      *
      * @return string
+     * @throws JsonException
      */
-    public static function toString($data) : string
+    public static function toString(mixed $data) : string
     {
         // Avoid Array to Strings conversion exception
         if (\is_array($data)) {
@@ -194,11 +199,11 @@ class Parse
     /**
      * Converts data to an integer.
      *
-     * @param array|string|object $data
+     * @param  mixed  $data
      *
      * @return int
      */
-    public static function toInteger($data) : int
+    public static function toInteger(mixed $data) : int
     {
         // Returns size of arrays
         if (\is_array($data)) {
@@ -206,7 +211,7 @@ class Parse
         }
 
         // Returns size of strings
-        if (\is_string($data) and ! preg_match('/[0-9. ,]+/', $data)) {
+        if (\is_string($data) && ! preg_match('/[0-9. ,]+/', $data)) {
             return \strlen($data);
         }
 
@@ -216,11 +221,11 @@ class Parse
     /**
      * Converts data to a boolean.
      *
-     * @param array|string|object $data
+     * @param  mixed  $data
      *
      * @return bool
      */
-    public static function toBoolean($data) : bool
+    public static function toBoolean(mixed $data) : bool
     {
         return (bool)$data;
     }
@@ -228,11 +233,11 @@ class Parse
     /**
      * Converts data to an object.
      *
-     * @param array|string $data
+     * @param  mixed  $data
      *
      * @return object
      */
-    public static function toObject($data)
+    public static function toObject(mixed $data) : object
     {
         return (object) $data;
     }
@@ -244,12 +249,12 @@ class Parse
     /**
      * Tries to explode a string with an array of delimiters.
      *
-     * @param string $string     The string
+     * @param  string  $string  The string
      * @param array  $delimiters An array of delimiters
      *
      * @return array
      */
-    public static function explodeWith($string, array $delimiters) : array
+    public static function explodeWith(string $string, array $delimiters) : array
     {
         $array = $string;
 

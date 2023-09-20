@@ -27,7 +27,7 @@ class BaseObjectMethods extends CollectionMethods
      */
     public static function methods($object) : array
     {
-        return get_class_methods(\get_class($object));
+        return get_class_methods($object::class);
     }
 
     /**
@@ -38,7 +38,7 @@ class BaseObjectMethods extends CollectionMethods
      *
      * @return object
      */
-    public static function unpack($object, $attribute = null)
+    public static function unpack($object, $attribute = null) : object
     {
         $object = (array) $object;
         $object = $attribute

@@ -5,6 +5,8 @@
 composer.phar
 .DS_Store
 Thumbs.db
+/storage/tmp
+/storage/temp
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
@@ -28,6 +30,7 @@ atlassian-ide-plugin.xml
 .php_cs.cache
 tests/.coverage
 /storage/tests/
+/.phpunit.result.cache
 
 # Dependencies
 composer.lock

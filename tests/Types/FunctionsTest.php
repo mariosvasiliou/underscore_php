@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -24,7 +25,7 @@ class FunctionsTest extends UnderscoreTestCase
     public function testCanCallFunctionOnlyOnce() : void
     {
         $number   = 0;
-        $function = Functions::once(function() use (&$number) {
+        $function = Functions::once(function () use (&$number) : void {
             ++$number;
         });
 
@@ -37,7 +38,7 @@ class FunctionsTest extends UnderscoreTestCase
     public function testCanCallFunctionOnlyXTimes() : void
     {
         $number   = 0;
-        $function = Functions::only(function() use (&$number) {
+        $function = Functions::only(function () use (&$number) : void {
             ++$number;
         }, 3);
 
@@ -53,7 +54,7 @@ class FunctionsTest extends UnderscoreTestCase
     public function testCanCallFunctionAfterXTimes() : void
     {
         $number   = 0;
-        $function = Functions::after(function() use (&$number) {
+        $function = Functions::after(function () use (&$number) : void {
             ++$number;
         }, 3);
 
@@ -68,9 +69,7 @@ class FunctionsTest extends UnderscoreTestCase
 
     public function testCanCacheFunctionResults() : void
     {
-        $function = Functions::cache(function($string) {
-            return microtime();
-        });
+        $function = Functions::cache(fn($string) : string|float => microtime());
 
         $result = $function('foobar');
 
@@ -81,7 +80,7 @@ class FunctionsTest extends UnderscoreTestCase
     public function testCanThrottleFunctions() : void
     {
         $number   = 0;
-        $function = Functions::throttle(function() use (&$number) {
+        $function = Functions::throttle(function () use (&$number) : void {
             ++$number;
         }, 1);
 
@@ -95,9 +94,7 @@ class FunctionsTest extends UnderscoreTestCase
 
     public function testCanPartiallyApplyArguments() : void
     {
-        $function = Functions::partial(function() {
-            return implode('', \func_get_args());
-        }, 2, null, 6);
+        $function = Functions::partial(fn() : string => implode('', \func_get_args()), 2, null, 6);
 
         $this->assertSame('246', $function(4));
         $this->assertSame('2468', $function(4, 8));

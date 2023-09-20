@@ -29,14 +29,14 @@ class BaseObject extends Repository
      *
      * @var string
      */
-    protected $typecaster = 'toObject';
+    protected string $typecaster = 'toObject';
 
     /**
      * Get a default value for a new repository.
      *
      * @return mixed
      */
-    protected function getDefault()
+    protected function getDefault() : object
     {
         return new stdClass();
     }

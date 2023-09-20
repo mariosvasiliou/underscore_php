@@ -22,18 +22,22 @@ use PHPUnit\Framework\TestCase;
 abstract class UnderscoreTestCase extends TestCase
 {
 
-    public $array        = ['foo' => 'bar', 'bis' => 'ter'];
-    public $arrayNumbers = [1, 2, 3];
-    public $arrayMulti   = [
+    public array $array = ['foo' => 'bar', 'bis' => 'ter'];
+
+    public array $arrayNumbers = [1, 2, 3];
+
+    public array $arrayMulti = [
         ['foo' => 'bar', 'bis' => 'ter'],
         ['foo' => 'bar', 'bis' => 'ter'],
         ['bar' => 'foo', 'bis' => 'ter'],
     ];
-    public $object;
+
+    public object $object;
+    
     /**
      * @var object
      */
-    public $objectMulti;
+    public object $objectMulti;
 
     /**
      * Restore data just in case.

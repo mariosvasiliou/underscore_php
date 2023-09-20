@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -42,7 +43,7 @@ class DummyClass extends Arrays
      *
      * @return self
      */
-    public function map($whatever) : self
+    public function map(mixed $whatever) : self
     {
         $this->subject = $whatever * 3;
 

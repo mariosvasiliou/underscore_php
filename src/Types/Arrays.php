@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -26,14 +27,14 @@ class Arrays extends Repository
      *
      * @var string
      */
-    protected $typecaster = 'toArray';
+    protected string $typecaster = 'toArray';
 
     /**
      * Get a default value for a new repository.
      *
      * @return mixed
      */
-    protected function getDefault()
+    protected function getDefault() : array
     {
         return [];
     }

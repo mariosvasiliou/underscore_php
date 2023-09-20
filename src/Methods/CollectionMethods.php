@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -22,16 +23,15 @@ abstract class CollectionMethods
     ////////////////////////////////////////////////////////////////////
     ///////////////////////////// ANALYZE //////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Check if an array has a given key.
      *
-     * @param $array
-     * @param $key
+     * @param  array  $array
+     * @param  string  $key
      *
      * @return bool
      */
-    public static function has($array, $key) : bool
+    public static function has(mixed $array, string $key) : bool
     {
         // Generate unique string to use as marker
         $unfound = StringsMethods::random(5);
@@ -46,13 +46,13 @@ abstract class CollectionMethods
     /**
      * Get a value from an collection using dot-notation.
      *
-     * @param array  $collection The collection to get from
-     * @param string $key        The key to look for
-     * @param mixed  $default    Default value to fallback to
+     * @param  array  $collection  The collection to get from
+     * @param  string|int|null  $key  The key to look for
+     * @param  mixed  $default  Default value to fallback to
      *
      * @return mixed
      */
-    public static function get($collection, $key, $default = null)
+    public static function get(mixed $collection, mixed $key = null, mixed $default = null) : mixed
     {
         if ($key === null) {
             return $collection;
@@ -65,7 +65,7 @@ abstract class CollectionMethods
         }
 
         // Crawl through collection, get key according to object or not
-        foreach (explode('.', $key) as $segment) {
+        foreach (explode('.', (string) $key) as $segment) {
             $collection = (array) $collection;
 
             if (!isset($collection[$segment])) {
@@ -87,7 +87,7 @@ abstract class CollectionMethods
      *
      * @return mixed
      */
-    public static function set($collection, $key, $value)
+    public static function set(mixed $collection, string $key, mixed $value) : mixed
     {
         static::internalSet($collection, $key, $value);
 
@@ -103,7 +103,7 @@ abstract class CollectionMethods
      *
      * @return mixed
      */
-    public static function setAndGet(&$collection, $key, $default = null)
+    public static function setAndGet(mixed &$collection, string $key, mixed $default = null) : mixed
     {
         // If the key doesn't exist, set it
         if (!static::has($collection, $key)) {
@@ -116,12 +116,12 @@ abstract class CollectionMethods
     /**
      * Remove a value from an array using dot notation.
      *
-     * @param $collection
-     * @param $key
+     * @param  mixed  $collection
+     * @param  string|array  $key
      *
      * @return mixed
      */
-    public static function remove($collection, $key)
+    public static function remove(mixed $collection, string|array $key) : mixed
     {
         // Recursive call
         if (\is_array($key)) {
@@ -145,15 +145,13 @@ abstract class CollectionMethods
      *
      * @return array|object
      */
-    public static function pluck($collection, $property)
+    public static function pluck($collection, $property) : object|array
     {
-        $plucked = array_map(function ($value) use ($property) {
-            return ArraysMethods::get($value, $property);
-        }, (array) $collection);
+        $plucked = array_map(fn($value) => ArraysMethods::get($value, $property), (array) $collection);
 
         // Convert back to object if necessary
         if (\is_object($collection)) {
-            $plucked = (object)$plucked;
+            return (object) $plucked;
         }
 
         return $plucked;
@@ -164,48 +162,38 @@ abstract class CollectionMethods
      * property within that.
      *
      * @param              $collection
-     * @param string       $property
-     * @param array|string $value
-     * @param string       $comparisonOp
+     * @param  string  $property
+     * @param  mixed  $value
+     * @param  string|null  $comparisonOp
      *
      * @return array|object
      */
-    public static function filterBy($collection, $property, $value, $comparisonOp = null)
+    public static function filterBy($collection, string $property, mixed $value, string $comparisonOp = null) :
+    object|array
     {
         if (!$comparisonOp) {
             $comparisonOp = \is_array($value) ? 'contains' : 'eq';
         }
+
         $ops = [
-            'eq' => function ($item, $prop, $value) {
-                return $item[$prop] === $value;
-            },
-            'gt' => function ($item, $prop, $value) {
-                return $item[$prop] > $value;
-            },
-            'gte' => function ($item, $prop, $value) {
-                return $item[$prop] >= $value;
-            },
-            'lt' => function ($item, $prop, $value) {
-                return $item[$prop] < $value;
-            },
-            'lte' => function ($item, $prop, $value) {
-                return $item[$prop] <= $value;
-            },
-            'ne' => function ($item, $prop, $value) {
-                return $item[$prop] !== $value;
-            },
-            'contains' => function ($item, $prop, $value) {
-                return \in_array($item[$prop], (array)$value, true);
-            },
-            'notContains' => function ($item, $prop, $value) {
-                return ! \in_array($item[$prop], (array)$value, true);
-            },
-            'newer' => function ($item, $prop, $value) {
-                return strtotime($item[$prop]) > strtotime($value);
-            },
-            'older' => function ($item, $prop, $value) {
-                return strtotime($item[$prop]) < strtotime($value);
-            },
+            'eq'          => fn($item, $prop, $value) : bool => $item[$prop] === $value,
+            'gt'          => fn($item, $prop, $value) : bool => $item[$prop] > $value,
+            'gte'         => fn($item, $prop, $value) : bool => $item[$prop] >= $value,
+            'lt'          => fn($item, $prop, $value) : bool => $item[$prop] < $value,
+            'lte'         => fn($item, $prop, $value) : bool => $item[$prop] <= $value,
+            'ne'          => fn($item, $prop, $value) : bool => $item[$prop] !== $value,
+            'contains'    => fn($item, $prop, $value) : bool => \in_array($item[$prop], (array) $value, true),
+            'notContains' => fn($item, $prop, $value) : bool => ! \in_array($item[$prop], (array) $value, true),
+            'newer'       => fn(
+                $item,
+                $prop,
+                $value
+            ) : bool => strtotime((string) $item[$prop]) > strtotime((string) $value),
+            'older'       => fn(
+                $item,
+                $prop,
+                $value
+            ) : bool => strtotime((string) $item[$prop]) < strtotime((string) $value),
         ];
         $result = array_values(array_filter((array) $collection, function ($item) use (
             $property,
@@ -219,7 +207,7 @@ abstract class CollectionMethods
             return $ops[$comparisonOp]($item, $property, $value);
         }));
         if (\is_object($collection)) {
-            $result = (object)$result;
+            return (object) $result;
         }
 
         return $result;
@@ -229,11 +217,11 @@ abstract class CollectionMethods
      * @param        $collection
      * @param        $property
      * @param        $value
-     * @param string $comparisonOp
+     * @param  string  $comparisonOp
      *
      * @return array|mixed
      */
-    public static function findBy($collection, $property, $value, $comparisonOp = 'eq')
+    public static function findBy($collection, $property, $value, string $comparisonOp = 'eq') : mixed
     {
         $filtered = static::filterBy($collection, $property, $value, $comparisonOp);
 
@@ -243,7 +231,6 @@ abstract class CollectionMethods
     ////////////////////////////////////////////////////////////////////
     ///////////////////////////// ANALYZE //////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Get all keys from a collection.
      *
@@ -275,49 +262,47 @@ abstract class CollectionMethods
     /**
      * Replace a key with a new key/value pair.
      *
-     * @param $collection
-     * @param $replace
-     * @param $key
-     * @param $value
+     * @param  array|object  $collection
+     * @param  string  $replace
+     * @param  string  $key
+     * @param  mixed  $value
      *
      * @return mixed
      */
-    public static function replace($collection, $replace, $key, $value)
+    public static function replace(array|object $collection, string $replace, string $key, mixed $value) : mixed
     {
         $collection = static::remove($collection, $replace);
-        $collection = static::set($collection, $key, $value);
 
-        return $collection;
+        return static::set($collection, $key, $value);
     }
 
     /**
      * Sort a collection by value, by a closure or by a property
      * If the sorter is null, the collection is sorted naturally.
      *
-     * @param        $collection
-     * @param null   $sorter
-     * @param string $direction
+     * @param  array|object  $collection
+     * @param  null  $sorter
+     * @param  string  $direction
      *
      * @return array
      */
-    public static function sort($collection, $sorter = null, $direction = 'asc') : array
+    public static function sort(array|object $collection, $sorter = null, string $direction = 'asc') : array
     {
         $collection = (array)$collection;
 
         // Get correct PHP constant for direction
-        $direction = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
+        $directionNumber = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
 
         // Transform all values into their results
         if ($sorter) {
-            $results = ArraysMethods::each($collection, function($value) use ($sorter) {
-                return \is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter);
-            });
+            $results = ArraysMethods::each($collection,
+                fn($value) => \is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter));
         } else {
             $results = $collection;
         }
 
         // Sort by the results and replace by original values
-        array_multisort($results, $direction, SORT_REGULAR, $collection);
+        array_multisort($results, $directionNumber, SORT_REGULAR, $collection);
 
         return $collection;
     }
@@ -327,11 +312,11 @@ abstract class CollectionMethods
      *
      * @param      $collection
      * @param      $grouper
-     * @param bool $saveKeys
+     * @param  bool  $saveKeys
      *
      * @return array
      */
-    public static function group($collection, $grouper, $saveKeys = false) : array
+    public static function group(mixed $collection, callable|string $grouper, bool $saveKeys = false) : array
     {
         $collection = (array)$collection;
         $result     = [];
@@ -367,14 +352,14 @@ abstract class CollectionMethods
      *
      * @return mixed
      */
-    protected static function internalSet(&$collection, $key, $value)
+    protected static function internalSet(&$collection, $key, $value) : mixed
     {
         if ($key === null) {
             return $collection = $value;
         }
 
         // Explode the keys
-        $keys = explode('.', $key);
+        $keys = explode('.', (string) $key);
 
         // Crawl through the keys
         while (\count($keys) > 1) {
@@ -400,17 +385,19 @@ abstract class CollectionMethods
         else {
             $collection->{$key} = $value;
         }
+
+        return $collection;
     }
 
     /**
      * Internal mechanics of remove method.
      *
-     * @param $collection
-     * @param $key
+     * @param  array|object  $collection
+     * @param  string  $key
      *
      * @return mixed
      */
-    protected static function internalRemove(&$collection, $key)
+    protected static function internalRemove(array|object &$collection, mixed $key) : bool
     {
         // Explode keys
         $keys = explode('.', $key);
@@ -440,6 +427,8 @@ abstract class CollectionMethods
         else {
             unset($collection[$key]);
         }
+
+        return true;
     }
 
     /**
@@ -448,12 +437,9 @@ abstract class CollectionMethods
      * returns an object with an index of each item.
      * Just like groupBy, but for when you know your keys are unique.
      *
-     * @param array $array
-     * @param mixed $key
      *
-     * @return array
      */
-    public static function indexBy(array $array, $key) : array
+    public static function indexBy(array $array, mixed $key) : array
     {
         $results = [];
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -25,7 +26,7 @@ class DummyDefault extends Strings
      *
      * @return string
      */
-    public function getDefault()
+    public function getDefault() : string
     {
         return 'foobar';
     }

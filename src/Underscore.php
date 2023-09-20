@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -24,7 +25,7 @@ class Underscore extends Repository
      *
      * @var array
      */
-    protected static $options;
+    protected static array $options = [];
 
     ////////////////////////////////////////////////////////////////////
     //////////////////////////// INTERFACE /////////////////////////////
@@ -51,11 +52,11 @@ class Underscore extends Repository
     /**
      * Get an option from the config file.
      *
-     * @param string $option The key of the option
+     * @param  string  $option  The key of the option
      *
      * @return mixed Its value
      */
-    public static function option($option)
+    public static function option(string $option) : mixed
     {
         // Get config file
         if (!static::$options) {

@@ -1,4 +1,12 @@
 # CHANGELOG
+
+## 3.0.0 2023-09-20
+
+- PHP 8.1+ support
+- Drop support for older PHP versions
+- Refactoring and strict types
+- Migrate phpunit to new schema for new version
+
 ## 2.2.0 2019-20-12
 - Refactor methods
 - Added missing pad method

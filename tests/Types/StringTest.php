@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -11,7 +12,6 @@
 
 namespace Underscore\Types;
 
-use Foo\Bar\Baz;
 use Underscore\Underscore;
 use Underscore\UnderscoreTestCase;
 
@@ -23,44 +23,33 @@ use Underscore\UnderscoreTestCase;
 class StringTest extends UnderscoreTestCase
 {
 
-    public $remove = 'foo foo bar foo kal ter son';
+    public string $remove = 'foo foo bar foo kal ter son';
 
-    /**
-     * @return array
-     */
-    public function provideAccord() : array
+    public function provideAccord() : \Iterator
     {
-        return [
-            [10, '10 things'],
-            [1, 'one thing'],
-            [0, 'nothing'],
-        ];
+        yield [10, '10 things'];
+        yield [1, 'one thing'];
+        yield [0, 'nothing'];
     }
 
-    /**
-     * @return array
-     */
-    public function provideFind() : array
+    public function provideFind() : \Iterator
     {
-        return [
-
-            // Simple cases
-            [false, 'foo', 'bar'],
-            [true, 'foo', 'foo'],
-            [true, 'FOO', 'foo', false],
-            [false, 'FOO', 'foo', true],
-            // Many needles, one haystack
-            [true, ['foo', 'bar'], $this->remove],
-            [false, ['vlu', 'bla'], $this->remove],
-            [true, ['foo', 'vlu'], $this->remove, false, false],
-            [false, ['foo', 'vlu'], $this->remove, false, true],
-            // Many haystacks, one needle
-            [true, 'foo', ['foo', 'bar']],
-            [true, 'bar', ['foo', 'bar']],
-            [false, 'foo', ['bar', 'kal']],
-            [true, 'foo', ['foo', 'foo'], false, false],
-            [false, 'foo', ['foo', 'bar'], false, true],
-        ];
+        // Simple cases
+        yield [false, 'foo', 'bar'];
+        yield [true, 'foo', 'foo'];
+        yield [true, 'FOO', 'foo', false];
+        yield [false, 'FOO', 'foo', true];
+        // Many needles, one haystack
+        yield [true, ['foo', 'bar'], $this->remove];
+        yield [false, ['vlu', 'bla'], $this->remove];
+        yield [true, ['foo', 'vlu'], $this->remove, false, false];
+        yield [false, ['foo', 'vlu'], $this->remove, false, true];
+        // Many haystacks, one needle
+        yield [true, 'foo', ['foo', 'bar']];
+        yield [true, 'bar', ['foo', 'bar']];
+        yield [false, 'foo', ['bar', 'kal']];
+        yield [true, 'foo', ['foo', 'foo'], false, false];
+        yield [false, 'foo', ['foo', 'bar'], false, true];
     }
 
     // Tests --------------------------------------------------------- /
@@ -134,15 +123,13 @@ class StringTest extends UnderscoreTestCase
      * @param      $expect
      * @param      $needle
      * @param      $haystack
-     * @param bool $caseSensitive
-     * @param bool $absoluteFinding
      */
     public function testCanFindStringsInStrings(
-        $expect,
-        $needle,
+        bool $expect,
+        string|array $needle,
         $haystack,
-        $caseSensitive = false,
-        $absoluteFinding = false
+        bool $caseSensitive = false,
+        bool $absoluteFinding = false
     ) : void
     {
         $result = Strings::find($haystack, $needle, $caseSensitive, $absoluteFinding);
@@ -179,7 +166,7 @@ class StringTest extends UnderscoreTestCase
      * @param $number
      * @param $expect
      */
-    public function testCanAccordAStringToItsNumeral($number, $expect) : void
+    public function testCanAccordAStringToItsNumeral(int $number, string $expect) : void
     {
         $result = Strings::accord($number, '%d things', 'one thing', 'nothing');
 
@@ -227,7 +214,7 @@ class StringTest extends UnderscoreTestCase
     {
         $string = Strings::randomStrings($words = 5, $size = 5);
 
-        $result = ($words * $size) + ($words * 1) - 1;
+        $result = ($words * $size) + ($words) - 1;
         $this->assertSame($result, \strlen($string));
     }
 

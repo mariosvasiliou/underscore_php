@@ -16,6 +16,7 @@ use Doctrine\Inflector\CachedWordInflector;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\Rules;
 use Doctrine\Inflector\RulesetInflector;
+use Exception;
 use RuntimeException;
 use Underscore\Types\Strings;
 use function Symfony\Component\String\u;
@@ -31,7 +32,7 @@ class StringsMethods
      *
      * @var array
      */
-    public static $uncountable = [
+    public static array $uncountable = [
         'audio',
         'bison',
         'cattle',
@@ -83,14 +84,14 @@ class StringsMethods
     /**
      * Create a string from a number.
      *
-     * @param int    $count A number
-     * @param string $many  If many
-     * @param string $one   If one
-     * @param string $zero  If one
+     * @param  int  $count  A number
+     * @param  string  $many  If many
+     * @param  string  $one  If one
+     * @param  string|null  $zero  If one
      *
      * @return string A string
      */
-    public static function accord($count, $many, $one, $zero = null) : string
+    public static function accord(int $count, string $many, string $one, string $zero = null) : string
     {
         if ($count === 1) {
             $output = $one;
@@ -108,20 +109,22 @@ class StringsMethods
     /**
      * Generate a more truly "random" alpha-numeric string.
      *
-     * @param int $length
+     * @author Taylor Otwell
      *
-     * @throws \RuntimeException
+     * @param  int  $length
      *
      * @return string
-     *
-     * @author Taylor Otwell
      */
-    public static function random($length = 16) : string
+    public static function random(int $length = 16) : string
     {
-        if (\function_exists('openssl_random_pseudo_bytes')) {
-            $bytes = openssl_random_pseudo_bytes($length * 2);
+        if (\function_exists('random_bytes')) {
+            try {
+                $bytes = \random_bytes($length * 2);
+            } catch (Exception) {
+                throw new RuntimeException('Unable to generate random string.');
+            }
 
-            if ($bytes === false) {
+            if ($bytes === '') {
                 throw new RuntimeException('Unable to generate random string.');
             }
 
@@ -133,16 +136,15 @@ class StringsMethods
 
     /**
      * Generate a "random" alpha-numeric string.
-     *
      * Should not be considered sufficient for cryptography, etc.
      *
-     * @param int $length
+     * @author Taylor Otwell
+     *
+     * @param  int  $length
      *
      * @return string
-     *
-     * @author Taylor Otwell
      */
-    public static function quickRandom($length = 16) : string
+    public static function quickRandom(int $length = 16) : string
     {
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -152,12 +154,12 @@ class StringsMethods
     /**
      * Generates a random suite of words.
      *
-     * @param int $words  The number of words
-     * @param int $length The length of each word
+     * @param  int  $words  The number of words
+     * @param  int  $length  The length of each word
      *
      * @return string
      */
-    public static function randomStrings($words, $length = 10) : string
+    public static function randomStrings(int $words, int $length = 10) : string
     {
         return Strings::from('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
                       ->shuffle()
@@ -174,14 +176,14 @@ class StringsMethods
     /**
      * Determine if a given string ends with a given substring.
      *
+     * @author Taylor Otwell
+     *
+     * @param  array|string  $needles
      * @param string       $haystack
-     * @param string|array $needles
      *
      * @return bool
-     *
-     * @author Taylor Otwell
      */
-    public static function endsWith($haystack, $needles) : bool
+    public static function endsWith(string $haystack, array|string $needles) : bool
     {
         foreach ((array)$needles as $needle) {
             if ((string)$needle === substr($haystack, -\strlen($needle))) {
@@ -231,17 +233,17 @@ class StringsMethods
     /**
      * Determine if a given string starts with a given substring.
      *
+     * @author Taylor Otwell
+     *
+     * @param  array|string  $needles
      * @param string       $haystack
-     * @param string|array $needles
      *
      * @return bool
-     *
-     * @author Taylor Otwell
      */
-    public static function startsWith($haystack, $needles) : bool
+    public static function startsWith(string $haystack, array|string $needles) : bool
     {
         foreach ((array)$needles as $needle) {
-            if ($needle !== '' && strpos($haystack, $needle) === 0) {
+            if ($needle !== '' && str_starts_with($haystack, $needle)) {
                 return true;
             }
         }
@@ -256,17 +258,22 @@ class StringsMethods
     /**
      * Find one or more needles in one or more haystacks.
      *
-     * @param array|string $string        The haystack(s) to search in
-     * @param array|string $needle        The needle(s) to search for
-     * @param bool         $caseSensitive Whether the function is case sensitive or not
-     * @param bool         $absolute      Whether all needle need to be found or whether one is enough
+     * @param  array|string  $string  The haystack(s) to search in
+     * @param  array|string  $needle  The needle(s) to search for
+     * @param  bool  $caseSensitive  Whether the function is case sensitive or not
+     * @param  bool  $absolute  Whether all needle need to be found or whether one is enough
      *
      * @return bool Found or not
      */
-    public static function find($string, $needle, $caseSensitive = false, $absolute = false) : bool
+    public static function find(
+        array|string $string,
+        array|string $needle,
+        bool $caseSensitive = false,
+        bool $absolute = false
+    ) : bool
     {
         // If several needles
-        if (\is_array($needle) or \is_array($string)) {
+        if (\is_array($needle) || \is_array($string)) {
             $sliceFrom = $string;
             $sliceTo   = $needle;
 
@@ -321,7 +328,7 @@ class StringsMethods
      *
      * @return false|string
      */
-    public static function sliceFrom($string, $slice)
+    public static function sliceFrom($string, $slice) : bool|string
     {
         $slice = strpos($string, $slice);
 
@@ -336,7 +343,7 @@ class StringsMethods
      *
      * @return false|string
      */
-    public static function sliceTo($string, $slice)
+    public static function sliceTo($string, $slice) : bool|string
     {
         $slice = strpos($string, $slice);
 
@@ -346,15 +353,15 @@ class StringsMethods
     /**
      * Get the base class in a namespace.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function baseClass($string) : string
+    public static function baseClass(string $string) : string
     {
-        $string = static::replace($string, '\\', '/');
+        $path = static::replace($string, '\\', '/');
 
-        return basename($string);
+        return basename($path);
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -364,12 +371,12 @@ class StringsMethods
     /**
      * Prepend a string with another.
      *
-     * @param string $string The string
-     * @param string $with   What to prepend with
+     * @param  string  $string  The string
+     * @param  string  $with  What to prepend with
      *
      * @return string
      */
-    public static function prepend($string, $with) : string
+    public static function prepend(string $string, string $with) : string
     {
         return $with.$string;
     }
@@ -377,12 +384,12 @@ class StringsMethods
     /**
      * Append a string to another.
      *
-     * @param string $string The string
-     * @param string $with   What to append with
+     * @param  string  $string  The string
+     * @param  string  $with  What to append with
      *
      * @return string
      */
-    public static function append($string, $with) : string
+    public static function append(string $string, string $with) : string
     {
         return $string.$with;
     }
@@ -390,15 +397,15 @@ class StringsMethods
     /**
      * Limit the number of characters in a string.
      *
-     * @param string $value
-     * @param int    $limit
-     * @param string $end
+     * @author Taylor Otwell
+     *
+     * @param  int  $limit
+     * @param  string  $end
+     * @param  string  $value
      *
      * @return string
-     *
-     * @author Taylor Otwell
      */
-    public static function limit($value, $limit = 100, $end = '...') : string
+    public static function limit(string $value, int $limit = 100, string $end = '...') : string
     {
         if (mb_strlen($value) <= $limit) {
             return $value;
@@ -418,11 +425,11 @@ class StringsMethods
     public static function remove($string, $remove) : string
     {
         if (\is_array($remove)) {
-            $string = preg_replace('#('.implode('|', $remove).')#', null, $string);
+            $string = preg_replace('#('.implode('|', $remove).')#', '', $string);
         }
 
         // Trim and return
-        return trim(str_replace($remove, null, $string));
+        return trim(str_replace($remove, '', $string));
     }
 
     /**
@@ -434,7 +441,7 @@ class StringsMethods
      *
      * @return string|string[]
      */
-    public static function replace($string, $replace, $with)
+    public static function replace($string, $replace, $with) : array|string
     {
         return str_replace($replace, $with, $string);
     }
@@ -442,17 +449,17 @@ class StringsMethods
     /**
      * Toggles a string between two states.
      *
-     * @param string $string The string to toggle
-     * @param string $first  First value
-     * @param string $second Second value
-     * @param bool   $loose  Whether a string neither matching 1 or 2 should be changed
+     * @param  string  $string  The string to toggle
+     * @param  string  $first  First value
+     * @param  string  $second  Second value
+     * @param  bool  $loose  Whether a string neither matching 1 or 2 should be changed
      *
      * @return string The toggled string
      */
-    public static function toggle($string, $first, $second, $loose = false) : string
+    public static function toggle(string $string, string $first, string $second, bool $loose = false) : string
     {
         // If the string given match none of the other two, and we're in strict mode, return it
-        if ( ! $loose and ! \in_array($string, [$first, $second], true)) {
+        if ( ! $loose && ! \in_array($string, [$first, $second], true)) {
             return $string;
         }
 
@@ -462,14 +469,14 @@ class StringsMethods
     /**
      * Generate a URL friendly "slug" from a given string.
      *
-     * @param string $title
-     * @param string $separator
+     * @author Taylor Otwell
+     *
+     * @param  string  $separator
+     * @param  string  $title
      *
      * @return string
-     *
-     * @author Taylor Otwell
      */
-    protected static function slug($title, $separator = '-') : string
+    protected static function slug(string $title, string $separator = '-') : string
     {
         $title = u($title)->ascii()->toString();
         // Convert all dashes/underscores into separator
@@ -490,11 +497,11 @@ class StringsMethods
      * Slugifies a string.
      *
      * @param        $string
-     * @param string $separator
+     * @param  string  $separator
      *
      * @return string
      */
-    public static function slugify($string, $separator = '-') : string
+    public static function slugify($string, string $separator = '-') : string
     {
         $string = str_replace('_', ' ', $string);
 
@@ -522,11 +529,11 @@ class StringsMethods
     /**
      * Lowercase a string.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function lower($string) : string
+    public static function lower(string $string) : string
     {
         return mb_strtolower($string, 'UTF-8');
     }
@@ -534,12 +541,11 @@ class StringsMethods
     /**
      * Get the plural form of an English word.
      *
-     * @param string $value
-     * @param int    $count
+     * @param  string  $value
      *
      * @return string
      */
-    public static function plural($value)
+    public static function plural(string $value = null) : string
     {
         if (static::uncountable($value)) {
             return $value;
@@ -553,10 +559,11 @@ class StringsMethods
     /**
      * Get the singular form of an English word.
      *
-     * @param string $value
+     * @param  string  $value
+     *
      * @return string
      */
-    public static function singular($value)
+    public static function singular(string $value) : string
     {
         $singular = static::inflector()->singularize($value);
 
@@ -566,11 +573,11 @@ class StringsMethods
     /**
      * Lowercase a string.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function upper($string) : string
+    public static function upper(string $string) : string
     {
         return mb_strtoupper($string, 'UTF-8');
     }
@@ -578,11 +585,11 @@ class StringsMethods
     /**
      * Convert a string to title case.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function title($string) : string
+    public static function title(string $string) : string
     {
         return mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
     }
@@ -590,19 +597,19 @@ class StringsMethods
     /**
      * Limit the number of words in a string.
      *
-     * @param string $value
-     * @param int    $words
-     * @param string $end
+     * @author Taylor Otwell
+     *
+     * @param  int  $words
+     * @param  string  $end
+     * @param  string  $value
      *
      * @return string
-     *
-     * @author Taylor Otwell
      */
-    public static function words($value, $words = 100, $end = '...') : string
+    public static function words(string $value, int $words = 100, string $end = '...') : string
     {
         preg_match('/^\s*+(?:\S++\s*+){1,'.$words.'}/u', $value, $matches);
 
-        if ( ! isset($matches[0]) || \strlen($value) === \strlen($matches[0])) {
+        if ( ! \array_key_exists(0, $matches) || \strlen($value) === \strlen($matches[0])) {
             return $value;
         }
 
@@ -616,11 +623,11 @@ class StringsMethods
     /**
      * Convert a string to PascalCase.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function toPascalCase($string) : string
+    public static function toPascalCase(string $string) : string
     {
         return u($string)->camel()->title()->toString();
     }
@@ -628,11 +635,11 @@ class StringsMethods
     /**
      * Convert a string to snake_case.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function toSnakeCase($string) : string
+    public static function toSnakeCase(string $string) : string
     {
         return u($string)->snake()->toString();
     }
@@ -640,11 +647,11 @@ class StringsMethods
     /**
      * Convert a string to camelCase.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
-    public static function toCamelCase($string) : string
+    public static function toCamelCase(string $string) : string
     {
         return u($string)->camel()->toString();
     }
@@ -652,13 +659,13 @@ class StringsMethods
     /**
      * Get the inflector instance.
      *
-     * @return \Doctrine\Inflector\Inflector
+     * @return Inflector
      */
-    public static function inflector()
+    public static function inflector() : Inflector
     {
         static $inflector;
 
-        if (is_null($inflector)) {
+        if ($inflector === null) {
             $inflector = new Inflector(
                 new CachedWordInflector(new RulesetInflector(
                     Rules::getSingularRuleset()
@@ -675,11 +682,11 @@ class StringsMethods
     /**
      * Determine if the given value is uncountable.
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
-    protected static function uncountable($value) : bool
+    protected static function uncountable(string $value) : bool
     {
         return \in_array(strtolower($value), static::$uncountable, true);
     }
@@ -687,12 +694,12 @@ class StringsMethods
     /**
      * Attempt to match the case on two strings.
      *
-     * @param string $value
-     * @param string $comparison
+     * @param  string  $value
+     * @param  string  $comparison
      *
      * @return string
      */
-    protected static function matchCase($value, $comparison) : string
+    protected static function matchCase(string $value, string $comparison) : string
     {
         $functions = ['mb_strtolower', 'mb_strtoupper', 'ucfirst', 'ucwords'];
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -90,7 +91,7 @@ class ObjectTest extends UnderscoreTestCase
         $object = BaseObject::set($object, 'foo.bar.bis', 'ter');
 
         $this->assertSame('ter', $object->foo['bar']['bis']);
-        $this->assertObjectHasAttribute('bar', $object);
+        $this->assertObjectHasProperty('bar', $object);
     }
 
     public function testCanRemoveValues() : void
@@ -123,9 +124,7 @@ class ObjectTest extends UnderscoreTestCase
         $under = BaseObject::sort($collection, 'child.sort', 'desc');
         $this->assertSame([$object_alt, $object], $under);
 
-        $under = BaseObject::sort($collection, function($value) {
-            return $value->child->sort;
-        }, 'desc');
+        $under = BaseObject::sort($collection, fn($value) => $value->child->sort, 'desc');
         $this->assertSame([$object_alt, $object], $under);
     }
 
@@ -142,8 +141,8 @@ class ObjectTest extends UnderscoreTestCase
         $objectAuto   = BaseObject::unpack($multi);
         $objectManual = BaseObject::unpack($multi, 'attributes');
 
-        $this->assertObjectHasAttribute('name', $objectAuto);
-        $this->assertObjectHasAttribute('age', $objectAuto);
+        $this->assertObjectHasProperty('name', $objectAuto);
+        $this->assertObjectHasProperty('age', $objectAuto);
         $this->assertSame('foo', $objectAuto->name);
         $this->assertSame(18, $objectAuto->age);
         $this->assertEqualsCanonicalizing($objectManual, $objectAuto);
@@ -204,9 +203,9 @@ class ObjectTest extends UnderscoreTestCase
         $b = BaseObject::findBy($a, 'name', 'baz');
         $this->assertInstanceOf(\stdClass::class, $b);
         $this->assertSame(2365, $b->value);
-        $this->assertObjectHasAttribute('name', $b);
-        $this->assertObjectHasAttribute('group', $b);
-        $this->assertObjectHasAttribute('value', $b);
+        $this->assertObjectHasProperty('name', $b);
+        $this->assertObjectHasProperty('group', $b);
+        $this->assertObjectHasProperty('value', $b);
 
         $c = BaseObject::findBy($a, 'value', 2468);
         $this->assertInstanceOf(\stdClass::class, $c);

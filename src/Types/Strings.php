@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -27,5 +28,5 @@ class Strings extends Repository
      *
      * @var string
      */
-    protected $typecaster = 'toString';
+    protected string $typecaster = 'toString';
 }

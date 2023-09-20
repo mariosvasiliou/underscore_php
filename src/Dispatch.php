@@ -17,20 +17,22 @@ use InvalidArgumentException;
 
 /**
  * Dispatches methods and classes to various places.
+ *
+ * @see \Underscore\DispatchTest
  */
 class Dispatch
 {
     /**
      * The namespace containing the Type classes.
      */
-    public const TYPES = 'Underscore\Types\\';
+    final public const TYPES = 'Underscore\Types\\';
 
     /**
      * An array of PHP types and what classes they map to.
      *
      * @var array
      */
-    protected static $classmap = [
+    protected static array $classmap = [
         'array'   => 'Arrays',
         'double'  => 'Number',
         'closure' => 'Functions',
@@ -49,7 +51,7 @@ class Dispatch
      *
      * @return string Its fully qualified corresponding class
      */
-    public static function toClass($subject) : string
+    public static function toClass(mixed $subject) : string
     {
         $subjectType = \gettype($subject);
         if ($subject instanceof Closure) {
@@ -67,12 +69,12 @@ class Dispatch
     /**
      * Defer a method to native PHP.
      *
-     * @param string $class  The class
+     * @param  string  $class  The class
      * @param string $method The method
      *
      * @return bool|string The correct function to call
      */
-    public static function toNative($class, $method)
+    public static function toNative(string $class, string $method) : bool|string
     {
         // Aliased native function
         $native = Method::getNative($method);

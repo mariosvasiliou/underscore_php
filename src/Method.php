@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of Underscore.php
@@ -13,6 +14,8 @@ namespace Underscore;
 
 /**
  * Various helpers relatives to methods.
+ *
+ * @see \Underscore\MethodTest
  */
 class Method
 {
@@ -21,7 +24,7 @@ class Method
      *
      * @var array
      */
-    public static $defer = [
+    public static array $defer = [
         'trim',
         'count',
         'round',
@@ -42,7 +45,7 @@ class Method
      *
      * @var array
      */
-    protected static $subjectless = [
+    protected static array $subjectless = [
         'fill',
     ];
 
@@ -52,7 +55,7 @@ class Method
      *
      * @var array
      */
-    protected static $breakers = [
+    protected static array $breakers = [
         'get',
         'sum',
         'count',
@@ -68,17 +71,11 @@ class Method
      *
      * @var array
      */
-    protected static $unchainable = [
+    protected static array $unchainable = [
         'Arrays::range',
         'Arrays::repeat',
     ];
 
-    /**
-     * A cache for better findInClasses performances.
-     *
-     * @var array
-     */
-    protected static $findCache = [];
 
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////// HELPERS /////////////////////////////
@@ -91,7 +88,7 @@ class Method
      *
      * @return string The Methods class
      */
-    public static function getMethodsFromType($class) : string
+    public static function getMethodsFromType(string $class) : string
     {
         return str_replace('Types', 'Methods', $class.'Methods');
     }
@@ -99,11 +96,9 @@ class Method
     /**
      * Whether a native method requires a subject or not.
      *
-     * @param string $method The function
-     *
-     * @return bool
+     * @param  string  $method  The function
      */
-    public static function isSubjectless($method) : bool
+    public static function isSubjectless(string $method) : bool
     {
         return \in_array($method, static::$subjectless, true);
     }
@@ -111,14 +106,12 @@ class Method
     /**
      * Whether a method should not be chained.
      *
-     * @param string $class  The class
+     * @param  string  $class  The class
      * @param string $method The method
-     *
-     * @return bool
      */
-    public static function isUnchainable($class, $method) : bool
+    public static function isUnchainable(string $class, string $method) : bool
     {
-        $class = str_replace('Underscore\Types\\', null, $class);
+        $class = str_replace('Underscore\Types\\', '', $class);
 
         return \in_array($class.'::'.$method, static::$unchainable, true);
     }
@@ -126,11 +119,9 @@ class Method
     /**
      * Whether a method is a breaker.
      *
-     * @param string $method The method
-     *
-     * @return bool
+     * @param  string  $method  The method
      */
-    public static function isBreaker($method) : bool
+    public static function isBreaker(string $method) : bool
     {
         return \in_array($method, static::$breakers, true);
     }
@@ -142,7 +133,7 @@ class Method
      *
      * @return string|null The real method name
      */
-    public static function getAliasOf($method) : ?string
+    public static function getAliasOf(string $method) : ?string
     {
         return Underscore::option('aliases.'.$method);
     }
@@ -150,11 +141,11 @@ class Method
     /**
      * Get the native function corresponding to a method.
      *
-     * @param string $method The method to look for
+     * @param  string  $method  The method to look for
      *
      * @return string|false The native function
      */
-    public static function getNative($method)
+    public static function getNative(string $method) : bool|string
     {
         // If a defered method exist
         if (\in_array($method, static::$defer, true)) {
@@ -169,12 +160,12 @@ class Method
     /**
      * Find a method in the type classes.
      *
-     * @param string $originalClass The class calling the method
-     * @param string $method        The method
+     * @param  string  $originalClass  The class calling the method
+     * @param  string  $method  The method
      *
      * @return string The class name
      */
-    public static function findInClasses($originalClass, $method) : string
+    public static function findInClasses(string $originalClass, string $method) : string
     {
         $classes = ['Arrays', 'Collection', 'Functions', 'Number', 'BaseObject', 'Strings'];
         foreach ($classes as $class) {

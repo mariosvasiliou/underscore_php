@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace Underscore\Traits;
 
 use BadMethodCallException;
+use Closure;
+use JsonException;
+use RuntimeException;
 use Underscore\Dispatch;
 use Underscore\Method;
 use Underscore\Methods\ArraysMethods;
@@ -29,21 +32,21 @@ abstract class Repository
      *
      * @var mixed
      */
-    protected $subject;
+    protected mixed $subject;
 
     /**
      * Custom functions.
      *
      * @var array
      */
-    protected static $macros = [];
+    protected static array $macros = [];
 
     /**
      * The method used to convert new subjects.
      *
      * @var string
      */
-    protected $typecaster;
+    protected string $typecaster = '';
 
     ////////////////////////////////////////////////////////////////////
     /////////////////////////// PUBLIC METHODS /////////////////////////
@@ -52,9 +55,9 @@ abstract class Repository
     /**
      * Create a new instance of the repository.
      *
-     * @param mixed $subject The repository subject
+     * @param  mixed|null  $subject  The repository subject
      */
-    public function __construct($subject = null)
+    public function __construct(mixed $subject = null)
     {
         // Assign subject
         $this->subject = $subject ?: $this->getDefault();
@@ -65,13 +68,13 @@ abstract class Repository
             $this->$typecaster();
         }
 
-        return $this;
     }
 
     /**
      * Transform subject to Strings on toString.
      *
      * @return string
+     * @throws JsonException
      */
     public function __toString() : string
     {
@@ -121,6 +124,7 @@ abstract class Repository
         $this->subject = ArraysMethods::set($this->subject, $key, $value);
     }
 
+
     /**
      * Check if the subject is empty.
      *
@@ -138,7 +142,7 @@ abstract class Repository
      *
      * @return Repository
      */
-    public function setSubject($value) : Repository
+    public function setSubject(mixed $value) : Repository
     {
         $this->subject = $value;
 
@@ -150,7 +154,7 @@ abstract class Repository
      *
      * @return mixed
      */
-    public function obtain()
+    public function obtain() : mixed
     {
         return $this->subject;
     }
@@ -158,10 +162,10 @@ abstract class Repository
     /**
      * Extend the class with a custom function.
      *
-     * @param string   $method  The macro's name
-     * @param callable $closure The macro
+     * @param  string  $method  The macro's name
+     * @param  Closure  $closure  The macro
      */
-    public static function extend($method, $closure) : void
+    public static function extend(string $method, Closure $closure) : void
     {
         static::$macros[static::class][$method] = $closure;
     }
@@ -256,13 +260,13 @@ abstract class Repository
     /**
      * Tries to find the right class to call.
      *
-     * @param string $callingClass The original class
-     * @param string $method       The method
+     * @param  string  $callingClass  The original class
+     * @param  string  $method  The method
      * @param array  $arguments    The arguments
      *
      * @return string The correct class
      */
-    protected static function computeClassToCall($callingClass, $method, $arguments) : string
+    protected static function computeClassToCall(string $callingClass, string $method, ...$arguments) : string
     {
         if ( ! StringsMethods::find($callingClass, 'Underscore\Types')) {
             if (isset($arguments[0])) {
@@ -285,22 +289,18 @@ abstract class Repository
      *
      * @return mixed
      */
-    protected static function callMethod($class, $method, $parameters)
+    protected static function callMethod(string $class, string $method, array $parameters) : mixed
     {
-        switch (\count($parameters)) {
-            case 0:
-                return $class::$method();
-            case 1:
-                return $class::$method($parameters[0]);
-            case 2:
-                return $class::$method($parameters[0], $parameters[1]);
-            case 3:
-                return $class::$method($parameters[0], $parameters[1], $parameters[2]);
-            case 4:
-                return $class::$method($parameters[0], $parameters[1], $parameters[2], $parameters[3]);
-            case 5:
-                return $class::$method($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
-        }
+        return match (\count($parameters)) {
+            0 => $class::$method(),
+            1 => $class::$method($parameters[0]),
+            2 => $class::$method($parameters[0], $parameters[1]),
+            3 => $class::$method($parameters[0], $parameters[1], $parameters[2]),
+            4 => $class::$method($parameters[0], $parameters[1], $parameters[2], $parameters[3]),
+            5 => $class::$method($parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]),
+            default => throw new RuntimeException('No appropriate method found'),
+        };
+
     }
 
     /**
@@ -308,7 +308,7 @@ abstract class Repository
      *
      * @return mixed
      */
-    protected function getDefault()
+    protected function getDefault() : mixed
     {
         return '';
     }

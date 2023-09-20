@@ -4,7 +4,7 @@ env:
   global:
     - XDEBUG_MODE=coverage
 php:
-  - 7.3.24
+  - 8.1.23
 cache:
   directories:
     - $HOME/.yarn-cache
