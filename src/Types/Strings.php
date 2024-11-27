@@ -24,8 +24,6 @@ class Strings extends Repository
 {
     /**
      * The method used to convert new subjects.
-     *
-     * @var string
      */
     protected string $typecaster = 'toString';
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Underscore\Types;
 
+use PHPUnit\Framework\Attributes\Test;
 use Underscore\Dummies\DummyDefault;
 use Underscore\UnderscoreTestCase;
 
@@ -23,14 +24,16 @@ use Underscore\UnderscoreTestCase;
 class ObjectTest extends UnderscoreTestCase
 {
 
-    public function testCanCreateObject() : void
+    #[Test]
+    public function canCreateObject(): void
     {
         $object = BaseObject::create();
 
         $this->assertInstanceOf('stdClass', $object->obtain());
     }
 
-    public function testCanObjectifyAnArray() : void
+    #[Test]
+    public function canObjectifyAnArray(): void
     {
         $object = BaseObject::from(['foo' => 'bar']);
         $this->assertSame('bar', $object->foo);
@@ -41,21 +44,24 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertSame(['foo' => 'bar', 'bis' => 'ter'], (array)$object->obtain());
     }
 
-    public function testCanGetKeys() : void
+    #[Test]
+    public function canGetKeys(): void
     {
         $object = BaseObject::keys($this->object);
 
         $this->assertSame(['foo', 'bis'], $object);
     }
 
-    public function testCanGetValues() : void
+    #[Test]
+    public function canGetValues(): void
     {
         $object = BaseObject::values($this->object);
 
         $this->assertSame(['bar', 'ter'], $object);
     }
 
-    public function testCanGetMethods() : void
+    #[Test]
+    public function canGetMethods(): void
     {
         $methods = [
             'getDefault',
@@ -77,7 +83,8 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertSame($methods, BaseObject::methods(new DummyDefault()));
     }
 
-    public function testCanPluckColumns() : void
+    #[Test]
+    public function canPluckColumns(): void
     {
         $object  = BaseObject::pluck($this->objectMulti, 'foo');
         $matcher = (object)['bar', 'bar', null];
@@ -85,7 +92,8 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertEqualsCanonicalizing($matcher, $object);
     }
 
-    public function testCanSetValues() : void
+    #[Test]
+    public function canSetValues(): void
     {
         $object = (object)['foo' => ['foo' => 'bar'], 'bar' => 'bis'];
         $object = BaseObject::set($object, 'foo.bar.bis', 'ter');
@@ -94,7 +102,8 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertObjectHasProperty('bar', $object);
     }
 
-    public function testCanRemoveValues() : void
+    #[Test]
+    public function canRemoveValues(): void
     {
         $array   = BaseObject::remove($this->objectMulti, '0.foo');
         $matcher = (array)$this->objectMulti;
@@ -103,14 +112,16 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertEqualsCanonicalizing((object)$matcher, $array);
     }
 
-    public function testCanConvertToJson() : void
+    #[Test]
+    public function canConvertToJson(): void
     {
         $under = BaseObject::toJSON($this->object);
 
         $this->assertSame('{"foo":"bar","bis":"ter"}', $under);
     }
 
-    public function testCanSort() : void
+    #[Test]
+    public function canSort(): void
     {
         $child      = (object)['sort' => 5];
         $child_alt  = (object)['sort' => 12];
@@ -128,14 +139,16 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertSame([$object_alt, $object], $under);
     }
 
-    public function testCanConvertToArray() : void
+    #[Test]
+    public function canConvertToArray(): void
     {
         $object = BaseObject::toArray($this->object);
 
         $this->assertSame($this->array, $object);
     }
 
-    public function testCanUnpackObjects() : void
+    #[Test]
+    public function canUnpackObjects(): void
     {
         $multi        = (object)['attributes' => ['name' => 'foo', 'age' => 18]];
         $objectAuto   = BaseObject::unpack($multi);
@@ -148,7 +161,8 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertEqualsCanonicalizing($objectManual, $objectAuto);
     }
 
-    public function testCanReplaceValues() : void
+    #[Test]
+    public function canReplaceValues(): void
     {
         $object  = BaseObject::replace($this->object, 'foo', 'notfoo', 'notbar');
         $matcher = (object)['notfoo' => 'notbar', 'bis' => 'ter'];
@@ -156,17 +170,19 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertEqualsCanonicalizing($matcher, $object);
     }
 
-    public function testCanSetAnGetValues() : void
+    #[Test]
+    public function canSetAnGetValues(): void
     {
         $object = $this->object;
         $getset = BaseObject::setAndGet($object, 'set', 'get');
         $get    = BaseObject::get($object, 'set');
 
-        $this->assertSame($getset, 'get');
+        $this->assertSame('get', $getset);
         $this->assertSame($get, $getset);
     }
 
-    public function testFilterBy() : void
+    #[Test]
+    public function filterBy(): void
     {
         $a = [
             (object)['id' => 123, 'name' => 'foo', 'group' => 'primary', 'value' => 123456],
@@ -191,7 +207,8 @@ class ObjectTest extends UnderscoreTestCase
         $this->assertSame(1468, $e[0]->value);
     }
 
-    public function testFindBy() : void
+    #[Test]
+    public function findBy(): void
     {
         $a = [
             (object)['id' => 123, 'name' => 'foo', 'group' => 'primary', 'value' => 123456],

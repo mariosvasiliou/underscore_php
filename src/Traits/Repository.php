@@ -25,26 +25,20 @@ use Underscore\Parse;
 /**
  * Base abstract class for repositories.
  */
-abstract class Repository
+abstract class Repository implements \Stringable
 {
     /**
      * The subject of the repository.
-     *
-     * @var mixed
      */
     protected mixed $subject;
 
     /**
      * Custom functions.
-     *
-     * @var array
      */
     protected static array $macros = [];
 
     /**
      * The method used to convert new subjects.
-     *
-     * @var string
      */
     protected string $typecaster = '';
 
@@ -64,7 +58,7 @@ abstract class Repository
 
         // Convert it if necessary
         $typecaster = $this->typecaster;
-        if ($typecaster) {
+        if ($typecaster !== '' && $typecaster !== '0') {
             $this->$typecaster();
         }
     }
@@ -72,7 +66,6 @@ abstract class Repository
     /**
      * Transform subject to Strings on toString.
      *
-     * @return string
      * @throws JsonException
      */
     public function __toString() : string
@@ -92,8 +85,6 @@ abstract class Repository
      * Create a new Repository from a subject.
      *
      * @param $subject
-     *
-     * @return Repository
      */
     public static function from($subject) : Repository
     {
@@ -118,7 +109,7 @@ abstract class Repository
      * @param $key
      * @param $value
      */
-    public function __set($key, $value)
+    public function __set(string $key, $value)
     {
         $this->subject = ArraysMethods::set($this->subject, $key, $value);
     }
@@ -126,8 +117,6 @@ abstract class Repository
 
     /**
      * Check if the subject is empty.
-     *
-     * @return bool
      */
     public function isEmpty() : bool
     {
@@ -137,9 +126,7 @@ abstract class Repository
     /**
      * Replace the Subject while maintaining chain.
      *
-     * @param mixed $value
      *
-     * @return Repository
      */
     public function setSubject(mixed $value) : Repository
     {
@@ -150,8 +137,6 @@ abstract class Repository
 
     /**
      * Get the subject from the object.
-     *
-     * @return mixed
      */
     public function obtain() : mixed
     {
@@ -181,7 +166,7 @@ abstract class Repository
      *
      * @return mixed
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic(string $method, $parameters)
     {
         // Get base class and methods class
         $callingClass = static::computeClassToCall(static::class, $method, $parameters);
@@ -226,20 +211,21 @@ abstract class Repository
      *
      * @return Repository
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, $arguments)
     {
         // Get correct class
         $class = Dispatch::toClass($this->subject);
 
         // Check for unchainable methods
         if (Method::isUnchainable($class, $method)) {
-            throw new BadMethodCallException('The method '.$class.'::'.$method.' can\'t be chained');
+            throw new BadMethodCallException('The method '.$class.'::'.$method." can't be chained");
         }
 
         // Prepend subject to arguments and call the method
         if ( ! Method::isSubjectless($method)) {
             array_unshift($arguments, $this->subject);
         }
+
         $result = $class::__callStatic($method, $arguments);
 
         // If the method is a breaker, return just the result
@@ -284,8 +270,6 @@ abstract class Repository
      * @param string $class      The class
      * @param string $method     The method
      * @param array  $parameters The arguments
-     *
-     * @return mixed
      */
     protected static function callMethod(string $class, string $method, array $parameters) : mixed
     {
@@ -302,8 +286,6 @@ abstract class Repository
 
     /**
      * Get a default value for a new repository.
-     *
-     * @return mixed
      */
     protected function getDefault() : mixed
     {

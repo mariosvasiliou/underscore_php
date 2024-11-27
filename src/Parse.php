@@ -23,13 +23,11 @@ class Parse
     ////////////////////////////////////////////////////////////////////
     /////////////////////////////// JSON ///////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Converts data from JSON.
      *
      * @param  string  $data  The data to parse
      *
-     * @return mixed
      * @throws JsonException
      */
     public static function fromJSON(string $data) : mixed
@@ -53,13 +51,11 @@ class Parse
     ////////////////////////////////////////////////////////////////////
     //////////////////////////////// XML ///////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Converts data from XML.
      *
      * @param  string  $xml  The data to parse
      *
-     * @return array
      * @throws JsonException
      */
     public static function fromXML(string $xml) : array
@@ -73,14 +69,11 @@ class Parse
     ////////////////////////////////////////////////////////////////////
     //////////////////////////////// CSV ///////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Converts data from CSV.
      *
      * @param  string  $data  The data to parse
      * @param  bool  $hasHeaders  Whether the CSV has headers
-     *
-     * @return mixed
      */
     public static function fromCSV(string $data, bool $hasHeaders = false) : array
     {
@@ -88,9 +81,7 @@ class Parse
 
         // Explodes rows
         $dataArray = static::explodeWith($data, [PHP_EOL, "\r", "\n"]);
-        $dataArray = array_map(function ($row) {
-            return Parse::explodeWith($row, [';', "\t", ',']);
-        }, $dataArray);
+        $dataArray = array_map(fn($row): array => Parse::explodeWith($row, [';', "\t", ',']), $dataArray);
 
         // Get headers
         $headers = $hasHeaders ? $dataArray[0] : array_keys($dataArray[0]);
@@ -113,8 +104,6 @@ class Parse
      * Converts data to CSV.
      *
      * @param mixed  $data          The data to convert
-     * @param  string  $delimiter
-     * @param  bool  $exportHeaders
      *
      * @return string Converted data
      */
@@ -148,7 +137,7 @@ class Parse
 
             // Else add values
             foreach ($row as $key => $value) {
-                $row[$key] = '"'.stripslashes($value).'"';
+                $row[$key] = '"'.stripslashes((string) $value).'"';
             }
 
             $csv[] = implode($delimiter, $row);
@@ -160,13 +149,10 @@ class Parse
     ////////////////////////////////////////////////////////////////////
     ///////////////////////// TYPES SWITCHERS //////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Converts data to an array.
      *
-     * @param  mixed  $data
      *
-     * @return array
      */
     public static function toArray(mixed $data) : array
     {
@@ -181,9 +167,7 @@ class Parse
     /**
      * Converts data to a string.
      *
-     * @param  mixed  $data
      *
-     * @return string
      * @throws JsonException
      */
     public static function toString(mixed $data) : string
@@ -199,9 +183,7 @@ class Parse
     /**
      * Converts data to an integer.
      *
-     * @param  mixed  $data
      *
-     * @return int
      */
     public static function toInteger(mixed $data) : int
     {
@@ -221,9 +203,7 @@ class Parse
     /**
      * Converts data to a boolean.
      *
-     * @param  mixed  $data
      *
-     * @return bool
      */
     public static function toBoolean(mixed $data) : bool
     {
@@ -233,9 +213,7 @@ class Parse
     /**
      * Converts data to an object.
      *
-     * @param  mixed  $data
      *
-     * @return object
      */
     public static function toObject(mixed $data) : object
     {
@@ -245,14 +223,11 @@ class Parse
     ////////////////////////////////////////////////////////////////////
     ///////////////////////////// HELPERS //////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Tries to explode a string with an array of delimiters.
      *
      * @param  string  $string  The string
      * @param array  $delimiters An array of delimiters
-     *
-     * @return array
      */
     public static function explodeWith(string $string, array $delimiters) : array
     {

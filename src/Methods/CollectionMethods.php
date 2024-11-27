@@ -27,9 +27,7 @@ abstract class CollectionMethods
      * Check if an array has a given key.
      *
      * @param  array  $array
-     * @param  string  $key
      *
-     * @return bool
      */
     public static function has(mixed $array, string $key) : bool
     {
@@ -42,15 +40,12 @@ abstract class CollectionMethods
     ////////////////////////////////////////////////////////////////////
     //////////////////////////// FETCH FROM ////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Get a value from an collection using dot-notation.
      *
      * @param  array  $collection  The collection to get from
      * @param  string|int|null  $key  The key to look for
      * @param  mixed  $default  Default value to fallback to
-     *
-     * @return mixed
      */
     public static function get(mixed $collection, mixed $key = null, mixed $default = null) : mixed
     {
@@ -84,8 +79,6 @@ abstract class CollectionMethods
      * @param mixed  $collection The collection
      * @param string $key        The key to set
      * @param mixed  $value      Its value
-     *
-     * @return mixed
      */
     public static function set(mixed $collection, string $key, mixed $value) : mixed
     {
@@ -100,8 +93,6 @@ abstract class CollectionMethods
      * @param mixed  $collection The collection
      * @param string $key        The key
      * @param mixed  $default    The default value to set if it isn't
-     *
-     * @return mixed
      */
     public static function setAndGet(mixed &$collection, string $key, mixed $default = null) : mixed
     {
@@ -116,10 +107,7 @@ abstract class CollectionMethods
     /**
      * Remove a value from an array using dot notation.
      *
-     * @param  mixed  $collection
-     * @param  string|array  $key
      *
-     * @return mixed
      */
     public static function remove(mixed $collection, string|array $key) : mixed
     {
@@ -142,12 +130,10 @@ abstract class CollectionMethods
      *
      * @param $collection
      * @param $property
-     *
-     * @return array|object
      */
     public static function pluck($collection, $property) : object|array
     {
-        $plucked = array_map(fn($value) => ArraysMethods::get($value, $property), (array) $collection);
+        $plucked = array_map(fn($value): mixed => ArraysMethods::get($value, $property), (array) $collection);
 
         // Convert back to object if necessary
         if (\is_object($collection)) {
@@ -162,11 +148,8 @@ abstract class CollectionMethods
      * property within that.
      *
      * @param              $collection
-     * @param  string  $property
-     * @param  mixed  $value
      * @param  string|null  $comparisonOp
      *
-     * @return array|object
      */
     public static function filterBy($collection, string $property, mixed $value, string $comparisonOp = null) :
     object|array
@@ -200,7 +183,7 @@ abstract class CollectionMethods
             $value,
             $ops,
             $comparisonOp
-        ) {
+        ): bool {
             $item = (array) $item;
             $item[$property] = static::get($item, $property, []);
 
@@ -217,11 +200,10 @@ abstract class CollectionMethods
      * @param        $collection
      * @param        $property
      * @param        $value
-     * @param  string  $comparisonOp
      *
      * @return array|mixed
      */
-    public static function findBy($collection, $property, $value, string $comparisonOp = 'eq') : mixed
+    public static function findBy($collection, string $property, $value, string $comparisonOp = 'eq'): mixed
     {
         $filtered = static::filterBy($collection, $property, $value, $comparisonOp);
 
@@ -235,8 +217,6 @@ abstract class CollectionMethods
      * Get all keys from a collection.
      *
      * @param $collection
-     *
-     * @return array
      */
     public static function keys($collection) : array
     {
@@ -247,8 +227,6 @@ abstract class CollectionMethods
      * Get all values from a collection.
      *
      * @param $collection
-     *
-     * @return array
      */
     public static function values($collection) : array
     {
@@ -258,16 +236,10 @@ abstract class CollectionMethods
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////// ALTER ///////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Replace a key with a new key/value pair.
      *
-     * @param  array|object  $collection
-     * @param  string  $replace
-     * @param  string  $key
-     * @param  mixed  $value
      *
-     * @return mixed
      */
     public static function replace(array|object $collection, string $replace, string $key, mixed $value) : mixed
     {
@@ -280,11 +252,8 @@ abstract class CollectionMethods
      * Sort a collection by value, by a closure or by a property
      * If the sorter is null, the collection is sorted naturally.
      *
-     * @param  array|object  $collection
      * @param  string|callable|null  $sorter
-     * @param  string  $direction
      *
-     * @return array
      */
     public static function sort(array|object $collection, string|callable $sorter = null, string $direction = 'asc') :
     array
@@ -295,7 +264,7 @@ abstract class CollectionMethods
         $directionNumber = (strtolower($direction) === 'desc') ? SORT_DESC : SORT_ASC;
 
         // Transform all values into their results
-        if ($sorter) {
+        if ($sorter !== null) {
             $results = ArraysMethods::each(
                 $collection,
                 fn($value) => \is_callable($sorter) ? $sorter($value) : ArraysMethods::get($value, $sorter)
@@ -315,9 +284,7 @@ abstract class CollectionMethods
      *
      * @param      $collection
      * @param      $grouper
-     * @param  bool  $saveKeys
      *
-     * @return array
      */
     public static function group(mixed $collection, callable|string $grouper, bool $saveKeys = false) : array
     {
@@ -345,15 +312,12 @@ abstract class CollectionMethods
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////// HELPERS /////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Internal mechanic of set method.
      *
      * @param $collection
      * @param $key
      * @param $value
-     *
-     * @return mixed
      */
     protected static function internalSet(&$collection, $key, $value) : mixed
     {
@@ -393,10 +357,8 @@ abstract class CollectionMethods
     /**
      * Internal mechanics of remove method.
      *
-     * @param  array|object  $collection
      * @param  string  $key
      *
-     * @return mixed
      */
     protected static function internalRemove(array|object &$collection, mixed $key) : bool
     {

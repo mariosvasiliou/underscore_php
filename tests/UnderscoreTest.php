@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Underscore;
 
+use PHPUnit\Framework\Attributes\Test;
 use Underscore\Dummies\DummyClass;
 use Underscore\Dummies\DummyDefault;
 use Underscore\Types\Arrays;
@@ -26,7 +27,8 @@ class UnderscoreTest extends UnderscoreTestCase
 {
     // Tests --------------------------------------------------------- /
 
-    public function testCanWrapObject() : void
+    #[Test]
+    public function canWrapObject(): void
     {
         $under1 = new Underscore($this->array);
         $under2 = Underscore::from($this->array);
@@ -35,21 +37,24 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertInstanceOf(Arrays::class, $under2);
     }
 
-    public function testCanRedirectToCorrectClass() : void
+    #[Test]
+    public function canRedirectToCorrectClass(): void
     {
         $under = Underscore::contains([1, 2, 3], 3);
 
         $this->assertTrue($under);
     }
 
-    public function testCanSwitchTypesMidCourse() : void
+    #[Test]
+    public function canSwitchTypesMidCourse(): void
     {
         $stringToArray = Strings::from('FOO.BAR')->lower()->explode('.')->last()->title();
 
         $this->assertSame('Bar', $stringToArray->obtain());
     }
 
-    public function testCanWrapWithShortcutFunction() : void
+    #[Test]
+    public function canWrapWithShortcutFunction(): void
     {
         // Skip if base function not present
         if ( ! \function_exists('underscore')) {
@@ -63,23 +68,26 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertInstanceOf(Underscore::class, $under);
     }
 
-    public function testCanHaveAliasesForMethods() : void
+    #[Test]
+    public function canHaveAliasesForMethods(): void
     {
         $under = Arrays::select($this->arrayNumbers, fn($value) : bool => $value === 1);
 
         $this->assertSame([1], $under);
     }
 
-    public function testUserCanExtendWithCustomFunctions() : void
+    #[Test]
+    public function userCanExtendWithCustomFunctions(): void
     {
         Arrays::extend('fooify', fn($array) : string => 'bar');
         $this->assertSame('bar', Arrays::fooify(['foo']));
 
-        Strings::extend('unfooer', fn($string) => Strings::replace($string, 'foo', 'bar'));
+        Strings::extend('unfooer', fn($string): string|array => Strings::replace($string, 'foo', 'bar'));
         $this->assertSame('bar', Strings::unfooer('foo'));
     }
 
-    public function testBreakersCantAlterTheOriginalValue() : void
+    #[Test]
+    public function breakersCantAlterTheOriginalValue(): void
     {
         $object = Arrays::from([1, 2, 3]);
         $sum    = $object->sum();
@@ -88,7 +96,8 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertSame([1, 2, 3], $object->obtain());
     }
 
-    public function testClassesCanExtendCoreTypes() : void
+    #[Test]
+    public function classesCanExtendCoreTypes(): void
     {
         $class = new DummyClass();
         $class->set('foo', 'bar');
@@ -97,7 +106,8 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertSame('{"foo":"bar"}', $class->toJSON());
     }
 
-    public function testClassesCanUpdateSubject() : void
+    #[Test]
+    public function classesCanUpdateSubject(): void
     {
         $class  = new DummyClass();
         $class  = $class->getUsers()->toJSON();
@@ -108,7 +118,8 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertSame($class, $class2);
     }
 
-    public function testClassesCanOverwriteUnderscore() : void
+    #[Test]
+    public function classesCanOverwriteUnderscore(): void
     {
         $class = new DummyClass();
         $class = $class->map(3)->paddingLeft(3)->toJSON();
@@ -116,7 +127,8 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertSame('"009"', $class);
     }
 
-    public function testMacrosCantConflictBetweenTypes() : void
+    #[Test]
+    public function macrosCantConflictBetweenTypes(): void
     {
         Strings::extend('foobar', fn() : string => 'string');
         Arrays::extend('foobar', fn() : string => 'arrays');
@@ -125,21 +137,24 @@ class UnderscoreTest extends UnderscoreTestCase
         $this->assertSame('arrays', Arrays::foobar());
     }
 
-    public function testCanCheckIfSubjectIsEmpty() : void
+    #[Test]
+    public function canCheckIfSubjectIsEmpty(): void
     {
         $array = Arrays::create();
 
         $this->assertTrue($array->isEmpty());
     }
 
-    public function testCanParseToStringOnToString() : void
+    #[Test]
+    public function canParseToStringOnToString(): void
     {
         $array = Arrays::from($this->array);
 
         $this->assertSame('{"foo":"bar","bis":"ter"}', (string) $array);
     }
 
-    public function testUnderscoreFindsRightClassToCall() : void
+    #[Test]
+    public function underscoreFindsRightClassToCall(): void
     {
         $numbers = [3, 4, 5];
         $product = Underscore::reduce($numbers, fn($w, $v) : int|float => $w * $v, 1);

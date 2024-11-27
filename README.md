@@ -132,7 +132,8 @@ Arrays::from($array)->diff($array2, $array3)->merge($array4) // Calls `array_dif
 ## Requirements
 
 PHP 7.3,7.4,8.0 use version 2.x\
-PHP 8.1+ use version 3.x
+PHP 8.1.x use version 3.x\
+PHP 8.2.x use version 4.x
 
 ## Documentation
 

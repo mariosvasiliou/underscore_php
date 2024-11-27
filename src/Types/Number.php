@@ -24,15 +24,11 @@ class Number extends Repository
 {
     /**
      * The method used to convert new subjects.
-     *
-     * @var string
      */
     protected string $typecaster = 'toInteger';
 
     /**
      * Get a default value for a new repository.
-     *
-     * @return mixed
      */
     protected function getDefault() : int
     {

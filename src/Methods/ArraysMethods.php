@@ -60,14 +60,11 @@ class ArraysMethods extends CollectionMethods
     ////////////////////////////////////////////////////////////////////
     ///////////////////////////// ANALYZE //////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Search for the index of a value in an array.
      *
-     * @param  array  $array
      * @param  string  $value
      *
-     * @return int|string|bool
      */
     public static function search(array $array, mixed $value) : int|string|bool
     {
@@ -77,10 +74,7 @@ class ArraysMethods extends CollectionMethods
     /**
      * Check if all items in an array match a truth test.
      *
-     * @param  array  $array
-     * @param  callable  $closure
      *
-     * @return bool
      */
     public static function matches(array $array, callable $closure) : bool
     {
@@ -91,6 +85,7 @@ class ArraysMethods extends CollectionMethods
         if (\count($array) === 0) {
             return true;
         }
+
         $result = array_search(false, $array, false);
 
         return \is_bool($result);
@@ -108,6 +103,7 @@ class ArraysMethods extends CollectionMethods
         if (\count($array) === 0) {
             return true;
         }
+
         $result = array_search(true, $array, false);
 
         return \is_int($result);
@@ -118,8 +114,6 @@ class ArraysMethods extends CollectionMethods
      *
      * @param $array
      * @param $value
-     *
-     * @return bool
      */
     public static function contains(array $array, mixed $value) : bool
     {
@@ -150,10 +144,8 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the max value from an array.
      *
-     * @param  array  $array
      * @param  Closure|null  $closure
      *
-     * @return mixed
      */
     public static function max(array $array, Closure $closure = null) : mixed
     {
@@ -168,10 +160,8 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the min value from an array.
      *
-     * @param  array  $array
      * @param  Closure|null  $closure
      *
-     * @return mixed
      */
     public static function min(array $array, Closure $closure = null) : mixed
     {
@@ -198,6 +188,8 @@ class ArraysMethods extends CollectionMethods
                 return $value;
             }
         }
+
+        return null;
     }
 
     /**
@@ -230,7 +222,7 @@ class ArraysMethods extends CollectionMethods
     /**
      * Return an array without all instances of certain values.
      */
-    public static function without(...$arguments)
+    public static function without(...$arguments): mixed
     {
         $array     = array_shift($arguments);
         // if singular argument and is an array treat this AS the array to run without agains
@@ -293,8 +285,6 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get everything but the last $to items.
      *
-     * @param  array  $array
-     * @param  int  $to
      *
      * @return array|mixed
      */
@@ -308,10 +298,7 @@ class ArraysMethods extends CollectionMethods
     /**
      * Get the last elements from index $from.
      *
-     * @param  array  $array
-     * @param  int  $from
      *
-     * @return array
      */
     public static function rest(array $array, int $from = 1) : array
     {
@@ -412,14 +399,12 @@ class ArraysMethods extends CollectionMethods
     /**
      * Find all items in an array that pass the truth test.
      *
-     * @param  array  $array
      * @param  Closure|null  $closure
-     *
      * @return array|mixed
      */
     public static function filter(array $array, Closure $closure = null) : mixed
     {
-        if ($closure === null) {
+        if ( ! $closure instanceof \Closure) {
             return static::clean($array);
         }
 
@@ -469,11 +454,9 @@ class ArraysMethods extends CollectionMethods
     /**
      * Invoke a function on all of an array's values.
      *
-     * @param  array  $array
      * @param  Closure|string  $callable  $callable
      * @param  array  $arguments
      *
-     * @return array
      */
     public static function invoke(array $array, Closure|string $callable, mixed $arguments = []) : array
     {
@@ -552,10 +535,8 @@ class ArraysMethods extends CollectionMethods
     /**
      * Prepend a value to an array.
      *
-     * @param  array  $array
      * @param  string  $value
      *
-     * @return array
      */
     public static function prepend(array $array, mixed $value) : array
     {
@@ -579,9 +560,7 @@ class ArraysMethods extends CollectionMethods
     /**
      * Return a duplicate free copy of an array
      *
-     * @param  array  $array
      *
-     * @return array
      */
     public static function unique(array $array) : array
     {

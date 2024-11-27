@@ -23,22 +23,16 @@ class FunctionsMethods
 
     /**
      * An array of functions to be called X times.
-     *
-     * @var array
      */
     public static array $canBeCalledTimes = [];
 
     /**
      * An array of cached function results.
-     *
-     * @var array
      */
     public static array $cached = [];
 
     /**
      * An array tracking the last time a function was called.
-     *
-     * @var array
      */
     public static array $throttle = [];
 
@@ -62,7 +56,6 @@ class FunctionsMethods
     /**
      * Create a function that can only be called $times times.
      *
-     * @param  callable  $function
      * @param  int  $canBeCalledTimes  $times    The number of times
      *
      * @return Closure
@@ -95,8 +88,6 @@ class FunctionsMethods
     /**
      * Create a function that can only be called after $times times.
      *
-     * @param  callable  $function
-     * @param  int  $times
      *
      * @return Closure
      * @throws Exception
@@ -127,7 +118,6 @@ class FunctionsMethods
     /**
      * Caches the result of a function and refer to it ever after.
      *
-     * @param  callable  $function
      *
      * @return Closure
      * @throws Exception
@@ -154,8 +144,6 @@ class FunctionsMethods
     /**
      * Only allow a function to be called every X ms.
      *
-     * @param  callable  $function
-     * @param  int  $ms
      *
      * @return Closure
      * @throws Exception
@@ -193,12 +181,11 @@ class FunctionsMethods
     {
         $boundArgs = \array_slice(\func_get_args(), 1);
 
-        return function () use ($boundArgs, $func) {
+        return function(...$calledArgs) use ($boundArgs, $func) {
             $args       = [];
-            $calledArgs = \func_get_args();
             $position   = 0;
 
-            foreach ($boundArgs as $i => $iValue) {
+            foreach ($boundArgs as $iValue) {
                 $args[] = $iValue ?? $calledArgs[$position++];
             }
 

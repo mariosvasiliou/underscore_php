@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Underscore\Types;
 
+use PHPUnit\Framework\Attributes\Test;
 use Underscore\UnderscoreTestCase;
 
 /**
@@ -22,7 +23,8 @@ use Underscore\UnderscoreTestCase;
 class FunctionsTest extends UnderscoreTestCase
 {
 
-    public function testCanCallFunctionOnlyOnce() : void
+    #[Test]
+    public function canCallFunctionOnlyOnce(): void
     {
         $number   = 0;
         $function = Functions::once(function () use (&$number) : void {
@@ -35,7 +37,8 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertSame(1, $number);
     }
 
-    public function testCanCallFunctionOnlyXTimes() : void
+    #[Test]
+    public function canCallFunctionOnlyXTimes(): void
     {
         $number   = 0;
         $function = Functions::only(function () use (&$number) : void {
@@ -51,7 +54,8 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertSame(3, $number);
     }
 
-    public function testCanCallFunctionAfterXTimes() : void
+    #[Test]
+    public function canCallFunctionAfterXTimes(): void
     {
         $number   = 0;
         $function = Functions::after(function () use (&$number) : void {
@@ -67,7 +71,8 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertSame(2, $number);
     }
 
-    public function testCanCacheFunctionResults() : void
+    #[Test]
+    public function canCacheFunctionResults(): void
     {
         $function = Functions::cache(fn($string) : string|float => microtime());
 
@@ -77,7 +82,8 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertNotEquals($result, $function('barfoo'));
     }
 
-    public function testCanThrottleFunctions() : void
+    #[Test]
+    public function canThrottleFunctions(): void
     {
         $number   = 0;
         $function = Functions::throttle(function () use (&$number) : void {
@@ -92,7 +98,8 @@ class FunctionsTest extends UnderscoreTestCase
         $this->assertSame(2, $number);
     }
 
-    public function testCanPartiallyApplyArguments() : void
+    #[Test]
+    public function canPartiallyApplyArguments(): void
     {
         $function = Functions::partial(fn() : string => implode('', \func_get_args()), 2, null, 6);
 

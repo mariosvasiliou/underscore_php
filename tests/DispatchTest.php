@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Underscore;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 
 /**
@@ -27,44 +29,43 @@ class DispatchTest extends UnderscoreTestCase
     /**
      * @return array
      */
-    public function provideTypes() : array
+    public static function provideTypes(): \Iterator
     {
-        return [
-            ['string', 'Strings'],
-            [5.14, 'Number'],
-            [512, 'Number'],
-            [1.2e3, 'Number'],
-            [7E-10, 'Number'],
-            [[], 'Arrays'],
-            [new stdClass(), 'BaseObject'],
-            [
-                function() {
-                    return;
-                },
-                'Functions',
-            ],
-            [null, 'Strings'],
+        yield ['string', 'Strings'];
+        yield [5.14, 'Number'];
+        yield [512, 'Number'];
+        yield [1.2e3, 'Number'];
+        yield [7E-10, 'Number'];
+        yield [[], 'Arrays'];
+        yield [new stdClass(), 'BaseObject'];
+        yield [
+            function(): void {
+            },
+            'Functions',
         ];
+        yield [null, 'Strings'];
     }
 
     /**
-     * @dataProvider provideTypes
      *
      * @param $subject
      * @param $expected
      */
-    public function testCanGetClassFromType($subject, $expected) : void
+    #[DataProvider('provideTypes')]
+    #[Test]
+    public function canGetClassFromType($subject, string $expected): void
     {
         $dispatch = Dispatch::toClass($subject);
 
-        $this->assertEquals('Underscore\Types\\'.$expected, $dispatch);
+        $this->assertSame('Underscore\Types\\'.$expected, $dispatch);
     }
 
-    public function testCanThrowExceptionAtUnknownTypes() : void
+    #[Test]
+    public function canThrowExceptionAtUnknownTypes(): void
     {
         $this->expectException('InvalidArgumentException');
 
         $file     = fopen('../.travis.yml', 'w+');
-        $dispatch = Dispatch::toClass($file);
+        Dispatch::toClass($file);
     }
 }

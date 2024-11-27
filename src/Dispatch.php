@@ -29,8 +29,6 @@ class Dispatch
 
     /**
      * An array of PHP types and what classes they map to.
-     *
-     * @var array
      */
     protected static array $classmap = [
         'array'   => 'Arrays',

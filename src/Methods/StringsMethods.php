@@ -29,8 +29,6 @@ class StringsMethods
 
     /**
      * Uncountable word forms.
-     *
-     * @var array
      */
     public static array $uncountable = [
         'audio',
@@ -77,6 +75,7 @@ class StringsMethods
         'traffic',
         'wheat',
     ];
+
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////// CREATE  /////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -109,9 +108,7 @@ class StringsMethods
      *
      * @author Taylor Otwell
      *
-     * @param  int  $length
      *
-     * @return string
      */
     public static function random(int $length = 16) : string
     {
@@ -138,9 +135,7 @@ class StringsMethods
      *
      * @author Taylor Otwell
      *
-     * @param  int  $length
      *
-     * @return string
      */
     public static function quickRandom(int $length = 16) : string
     {
@@ -154,8 +149,6 @@ class StringsMethods
      *
      * @param  int  $words  The number of words
      * @param  int  $length  The length of each word
-     *
-     * @return string
      */
     public static function randomStrings(int $words, int $length = 10) : string
     {
@@ -170,21 +163,17 @@ class StringsMethods
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////// ANALYZE /////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Determine if a given string ends with a given substring.
      *
      * @author Taylor Otwell
      *
-     * @param  array|string  $needles
-     * @param string       $haystack
      *
-     * @return bool
      */
     public static function endsWith(string $haystack, array|string $needles) : bool
     {
         foreach ((array) $needles as $needle) {
-            if ((string) $needle === substr($haystack, -\strlen($needle))) {
+            if (str_ends_with($haystack, (string) $needle)) {
                 return true;
             }
         }
@@ -196,8 +185,6 @@ class StringsMethods
      * Check if a string is an IP.
      *
      * @param $string
-     *
-     * @return bool
      */
     public static function isIp($string) : bool
     {
@@ -208,8 +195,6 @@ class StringsMethods
      * Check if a string is an email.
      *
      * @param $string
-     *
-     * @return bool
      */
     public static function isEmail($string) : bool
     {
@@ -220,8 +205,6 @@ class StringsMethods
      * Check if a string is an url.
      *
      * @param $string
-     *
-     * @return bool
      */
     public static function isUrl($string) : bool
     {
@@ -233,15 +216,12 @@ class StringsMethods
      *
      * @author Taylor Otwell
      *
-     * @param  array|string  $needles
-     * @param string       $haystack
      *
-     * @return bool
      */
     public static function startsWith(string $haystack, array|string $needles) : bool
     {
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && str_starts_with($haystack, $needle)) {
+            if ($needle !== '' && str_starts_with($haystack, (string) $needle)) {
                 return true;
             }
         }
@@ -299,7 +279,7 @@ class StringsMethods
         // If string found
         $pos = strpos($string, $needle);
 
-        return !($pos === false);
+        return $pos !== false;
     }
 
     /**
@@ -307,8 +287,6 @@ class StringsMethods
      *
      * @param $string
      * @param $slice
-     *
-     * @return array
      */
     public static function slice($string, $slice) : array
     {
@@ -328,9 +306,9 @@ class StringsMethods
      */
     public static function sliceFrom($string, $slice) : bool|string
     {
-        $slice = strpos($string, $slice);
+        $slice = strpos((string) $string, (string) $slice);
 
-        return substr($string, $slice);
+        return substr((string) $string, $slice);
     }
 
     /**
@@ -343,17 +321,15 @@ class StringsMethods
      */
     public static function sliceTo($string, $slice) : bool|string
     {
-        $slice = strpos($string, $slice);
+        $slice = strpos((string) $string, (string) $slice);
 
-        return substr($string, 0, $slice);
+        return substr((string) $string, 0, $slice);
     }
 
     /**
      * Get the base class in a namespace.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function baseClass(string $string) : string
     {
@@ -365,14 +341,11 @@ class StringsMethods
     ////////////////////////////////////////////////////////////////////
     /////////////////////////////// ALTER //////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Prepend a string with another.
      *
      * @param  string  $string  The string
      * @param  string  $with  What to prepend with
-     *
-     * @return string
      */
     public static function prepend(string $string, string $with) : string
     {
@@ -384,8 +357,6 @@ class StringsMethods
      *
      * @param  string  $string  The string
      * @param  string  $with  What to append with
-     *
-     * @return string
      */
     public static function append(string $string, string $with) : string
     {
@@ -397,11 +368,7 @@ class StringsMethods
      *
      * @author Taylor Otwell
      *
-     * @param  int  $limit
-     * @param  string  $end
-     * @param  string  $value
      *
-     * @return string
      */
     public static function limit(string $value, int $limit = 100, string $end = '...') : string
     {
@@ -417,13 +384,11 @@ class StringsMethods
      *
      * @param $string
      * @param $remove
-     *
-     * @return string
      */
     public static function remove($string, $remove) : string
     {
         if (\is_array($remove)) {
-            $string = preg_replace('#('.implode('|', $remove).')#', '', $string);
+            $string = preg_replace('#('.implode('|', $remove).')#', '', (string) $string);
         }
 
         // Trim and return
@@ -469,10 +434,7 @@ class StringsMethods
      *
      * @author Taylor Otwell
      *
-     * @param  string  $separator
-     * @param  string  $title
      *
-     * @return string
      */
     protected static function slug(string $title, string $separator = '-') : string
     {
@@ -483,21 +445,19 @@ class StringsMethods
         $title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
 
         // Remove all characters that are not the separator, letters, numbers, or whitespace.
-        $title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($title));
+        $title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower((string) $title));
 
         // Replace all separator characters and whitespace by a single separator
-        $title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
+        $title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, (string) $title);
 
-        return trim($title, $separator);
+        return trim((string) $title, $separator);
     }
 
     /**
      * Slugifies a string.
      *
      * @param        $string
-     * @param  string  $separator
      *
-     * @return string
      */
     public static function slugify($string, string $separator = '-') : string
     {
@@ -511,25 +471,21 @@ class StringsMethods
      *
      * @param      $string
      * @param      $with
-     * @param null $limit
      *
-     * @return array
      */
     public static function explode($string, $with, $limit = null) : array
     {
         if ( ! $limit) {
-            return explode($with, $string);
+            return explode($with, (string) $string);
         }
 
-        return explode($with, $string, $limit);
+        return explode($with, (string) $string, $limit);
     }
 
     /**
      * Lowercase a string.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function lower(string $string) : string
     {
@@ -539,7 +495,6 @@ class StringsMethods
     /**
      * Get the plural form of an English word.
      *
-     * @param  string  $value
      *
      * @return string
      */
@@ -557,9 +512,7 @@ class StringsMethods
     /**
      * Get the singular form of an English word.
      *
-     * @param  string  $value
      *
-     * @return string
      */
     public static function singular(string $value) : string
     {
@@ -571,9 +524,7 @@ class StringsMethods
     /**
      * Lowercase a string.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function upper(string $string) : string
     {
@@ -583,9 +534,7 @@ class StringsMethods
     /**
      * Convert a string to title case.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function title(string $string) : string
     {
@@ -597,11 +546,7 @@ class StringsMethods
      *
      * @author Taylor Otwell
      *
-     * @param  int  $words
-     * @param  string  $end
-     * @param  string  $value
      *
-     * @return string
      */
     public static function words(string $value, int $words = 100, string $end = '...') : string
     {
@@ -617,13 +562,10 @@ class StringsMethods
     ////////////////////////////////////////////////////////////////////
     /////////////////////////// CASE SWITCHERS /////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Convert a string to PascalCase.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function toPascalCase(string $string) : string
     {
@@ -633,9 +575,7 @@ class StringsMethods
     /**
      * Convert a string to snake_case.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function toSnakeCase(string $string) : string
     {
@@ -645,9 +585,7 @@ class StringsMethods
     /**
      * Convert a string to camelCase.
      *
-     * @param  string  $string
      *
-     * @return string
      */
     public static function toCamelCase(string $string) : string
     {
@@ -656,8 +594,6 @@ class StringsMethods
 
     /**
      * Get the inflector instance.
-     *
-     * @return Inflector
      */
     public static function inflector() : Inflector
     {
@@ -680,9 +616,7 @@ class StringsMethods
     /**
      * Determine if the given value is uncountable.
      *
-     * @param  string  $value
      *
-     * @return bool
      */
     protected static function uncountable(string $value) : bool
     {
@@ -692,10 +626,7 @@ class StringsMethods
     /**
      * Attempt to match the case on two strings.
      *
-     * @param  string  $value
-     * @param  string  $comparison
      *
-     * @return string
      */
     protected static function matchCase(string $value, string $comparison) : string
     {

@@ -22,21 +22,16 @@ class Underscore extends Repository
 {
     /**
      * The current config.
-     *
-     * @var array
      */
     protected static array $options = [];
 
     ////////////////////////////////////////////////////////////////////
     //////////////////////////// INTERFACE /////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
     /**
      * Dispatch to the correct Repository class.
      *
      * @param mixed $subject The subject
-     *
-     * @return Repository
      */
     public static function from($subject) : Repository
     {

@@ -1,7 +1,14 @@
 # CHANGELOG
 
-## 3.0.0 2023-09-20
+## 4.0.0 2024-11-25
 
+- PHP 8.2+ support
+- Added rector package for development
+- Refactoring using rector
+- Migrate phpunit to new version 10
+- Added github actions
+
+## 3.0.0 2023-09-20
 - PHP 8.1+ support
 - Drop support for older PHP versions
 - Refactoring and strict types

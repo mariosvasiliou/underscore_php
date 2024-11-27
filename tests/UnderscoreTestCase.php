@@ -34,9 +34,6 @@ abstract class UnderscoreTestCase extends TestCase
 
     public object $object;
     
-    /**
-     * @var object
-     */
     public object $objectMulti;
 
     /**

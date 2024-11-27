@@ -21,8 +21,6 @@ class Method
 {
     /**
      * A list of methods to automatically defer to PHP.
-     *
-     * @var array
      */
     public static array $defer = [
         'trim',
@@ -42,8 +40,6 @@ class Method
     /**
      * A list of methods where the subject
      * isn't to be added to the arguments.
-     *
-     * @var array
      */
     protected static array $subjectless = [
         'fill',
@@ -52,8 +48,6 @@ class Method
     /**
      * A list of methods that are allowed
      * to break the chain.
-     *
-     * @var array
      */
     protected static array $breakers = [
         'get',
@@ -68,8 +62,6 @@ class Method
 
     /**
      * Unchainable methods.
-     *
-     * @var array
      */
     protected static array $unchainable = [
         'Arrays::range',

@@ -24,15 +24,11 @@ class Arrays extends Repository
 {
     /**
      * The method used to convert new subjects.
-     *
-     * @var string
      */
     protected string $typecaster = 'toArray';
 
     /**
      * Get a default value for a new repository.
-     *
-     * @return mixed
      */
     protected function getDefault() : array
     {

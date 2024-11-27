@@ -22,10 +22,7 @@ class NumberMethods
      * Add 0 padding to an integer.
      *
      * @param     $number
-     * @param  int  $padding
-     * @param  int  $direction
      *
-     * @return string
      */
     public static function padding(mixed $number, int $padding = 1, int $direction = STR_PAD_BOTH) : string
     {
@@ -36,9 +33,7 @@ class NumberMethods
      * Add 0 padding on the left of an integer.
      *
      * @param     $number
-     * @param  int  $padding
      *
-     * @return string
      */
     public static function paddingLeft($number, int $padding = 1) : string
     {
@@ -49,9 +44,7 @@ class NumberMethods
      * Add 0 padding on the right of an integer.
      *
      * @param     $number
-     * @param  int  $padding
      *
-     * @return string
      */
     public static function paddingRight($number, int $padding = 1) : string
     {
