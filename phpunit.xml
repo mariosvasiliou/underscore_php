@@ -18,6 +18,9 @@
     <testsuites>
         <testsuite name="Underscore Test Suite">
             <directory suffix=".php">tests</directory>
+            <exclude>tests\Dummies\DummyClass.php</exclude>
+            <exclude>tests\Dummies\DummyDefault.php</exclude>
+            <exclude>tests\UnderscoreTestCase.php</exclude>
         </testsuite>
     </testsuites>
     <php>
