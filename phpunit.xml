@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheResult="true"
-         bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         cacheResult="true"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         processIsolation="false"
          stopOnDefect="false" executionOrder="default">
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
+    <coverage includeUncoveredFiles="true">
         <report>
             <clover outputFile="./storage/tests/coverage.xml"/>
             <crap4j outputFile="./storage/tests/crap4j.xml"/>
