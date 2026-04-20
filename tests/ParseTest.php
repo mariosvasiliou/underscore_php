@@ -31,12 +31,12 @@ class ParseTest extends UnderscoreTestCase
     /**
      * @return array
      */
-    public function provideSwitchers(): \Iterator
+    public static function provideSwitchers(): \Iterator
     {
         yield ['toArray', null, []];
         yield ['toArray', 15, [15]];
         yield ['toArray', 'foobar', ['foobar']];
-        yield ['toArray', (object) $this->array, $this->array];
+        yield ['toArray', (object) ['foo' => 'bar', 'bis' => 'ter'], ['foo' => 'bar', 'bis' => 'ter']];
         yield ['toArray', new DummyDefault(), ['foo', 'bar']];
         yield ['toString', 15, '15'];
         yield ['toString', ['foo', 'bar'], '["foo","bar"]'];
@@ -45,7 +45,7 @@ class ParseTest extends UnderscoreTestCase
         yield ['toInteger', '15', 15];
         yield ['toInteger', [1, 2, 3], 3];
         yield ['toInteger', [], 0];
-        yield ['toObject', $this->array, (object) $this->array];
+        yield ['toObject', ['foo' => 'bar', 'bis' => 'ter'], (object) ['foo' => 'bar', 'bis' => 'ter']];
         yield ['toBoolean', '', false];
         yield ['toBoolean', 'foo', true];
         yield ['toBoolean', 15, true];

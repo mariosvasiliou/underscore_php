@@ -130,7 +130,7 @@ class ArraysMethods extends CollectionMethods
      */
     public static function average(array $array, int $decimals = 0) : float
     {
-        return round((array_sum($array) / \count($array)), $decimals);
+        return round((array_sum(array_filter($array, 'is_numeric')) / \count($array)), $decimals);
     }
 
     /**

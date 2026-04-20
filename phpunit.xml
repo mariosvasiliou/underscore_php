@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
          cacheResult="true"
          bootstrap="vendor/autoload.php"
          colors="true"
          processIsolation="false"
          stopOnDefect="false" executionOrder="default">
-    <coverage includeUncoveredFiles="true">
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
+    <coverage>
         <report>
             <clover outputFile="./storage/tests/coverage.xml"/>
             <crap4j outputFile="./storage/tests/crap4j.xml"/>
@@ -18,9 +23,9 @@
     <testsuites>
         <testsuite name="Underscore Test Suite">
             <directory suffix=".php">tests</directory>
-            <exclude>tests\Dummies\DummyClass.php</exclude>
-            <exclude>tests\Dummies\DummyDefault.php</exclude>
-            <exclude>tests\UnderscoreTestCase.php</exclude>
+            <exclude>tests/Dummies/DummyClass.php</exclude>
+            <exclude>tests/Dummies/DummyDefault.php</exclude>
+            <exclude>tests/UnderscoreTestCase.php</exclude>
         </testsuite>
     </testsuites>
     <php>

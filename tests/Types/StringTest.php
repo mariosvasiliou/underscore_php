@@ -34,18 +34,19 @@ class StringTest extends UnderscoreTestCase
         yield [0, 'nothing'];
     }
 
-    public function provideFind() : \Iterator
+    public static function provideFind(): \Iterator
     {
+        $remove = 'foo foo bar foo kal ter son';
         // Simple cases
         yield [false, 'foo', 'bar'];
         yield [true, 'foo', 'foo'];
         yield [true, 'FOO', 'foo', false];
         yield [false, 'FOO', 'foo', true];
         // Many needles, one haystack
-        yield [true, ['foo', 'bar'], $this->remove];
-        yield [false, ['vlu', 'bla'], $this->remove];
-        yield [true, ['foo', 'vlu'], $this->remove, false, false];
-        yield [false, ['foo', 'vlu'], $this->remove, false, true];
+        yield [true, ['foo', 'bar'], $remove];
+        yield [false, ['vlu', 'bla'], $remove];
+        yield [true, ['foo', 'vlu'], $remove, false, false];
+        yield [false, ['foo', 'vlu'], $remove, false, true];
         // Many haystacks, one needle
         yield [true, 'foo', ['foo', 'bar']];
         yield [true, 'bar', ['foo', 'bar']];
