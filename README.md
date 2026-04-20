@@ -1,6 +1,6 @@
 # Underscore.php
 
-[![Build Status](https://travis-ci.org/mariosvasiliou/underscore_php.svg?branch=master)](https://travis-ci.org/mariosvasiliou/underscore_php)
+[![CI](https://github.com/mariosvasiliou/underscore_php/actions/workflows/ci.yml/badge.svg)](https://github.com/mariosvasiliou/underscore_php/actions/workflows/ci.yml)
 [![Latest Stable Version](http://img.shields.io/packagist/v/mariosvasiliou/underscore_php.svg?style=flat)](https://packagist.org/packages/mariosvasiliou/underscore_php)
 [![Total Downloads](http://img.shields.io/packagist/dt/mariosvasiliou/underscore_php.svg?style=flat)](https://packagist.org/packages/mariosvasiliou/underscore_php)
 [![Scrutinizer Quality Score](http://img.shields.io/scrutinizer/g/mariosvasiliou/underscore_php.svg?style=flat)](https://scrutinizer-ci.com/g/mariosvasiliou/underscore_php/)
