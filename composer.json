@@ -1,7 +1,6 @@
 {
   "name": "mariosvasiliou/underscore_php",
   "description": "A redacted port of Underscore.js for PHP",
-  "version": "5.0",
   "license": "MIT",
   "keywords": [
     "toolkit",
