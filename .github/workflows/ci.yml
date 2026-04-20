@@ -28,7 +28,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
-          coverage: none
+          coverage: pcov
           tools: composer:v2
 
       - name: Get Composer cache directory
@@ -50,4 +50,17 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-scripts
 
       - name: Run Testsuite
-        run: vendor/bin/phpunit
+        run: |
+          mkdir -p storage/tests
+          vendor/bin/phpunit \
+            --coverage-clover=storage/tests/coverage.xml \
+            --coverage-text \
+            --coverage-filter=src
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-php-${{ matrix.php-version }}
+          path: storage/tests/coverage.xml
+          if-no-files-found: ignore

@@ -5,27 +5,16 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          processIsolation="false"
-         stopOnDefect="false" executionOrder="default">
+         stopOnDefect="false"
+         executionOrder="default">
     <source>
         <include>
             <directory suffix=".php">src</directory>
         </include>
     </source>
-    <coverage>
-        <report>
-            <clover outputFile="./storage/tests/coverage.xml"/>
-            <crap4j outputFile="./storage/tests/crap4j.xml"/>
-            <html outputDirectory="./storage/tests/html/report.html" lowUpperBound="25" highLowerBound="70"/>
-            <php outputFile="./storage/tests/coverage.serialized"/>
-            <text outputFile="php://stdout" showUncoveredFiles="true" showOnlySummary="true"/>
-        </report>
-    </coverage>
     <testsuites>
         <testsuite name="Underscore Test Suite">
-            <directory suffix=".php">tests</directory>
-            <exclude>tests/Dummies/DummyClass.php</exclude>
-            <exclude>tests/Dummies/DummyDefault.php</exclude>
-            <exclude>tests/UnderscoreTestCase.php</exclude>
+            <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
     <php>
